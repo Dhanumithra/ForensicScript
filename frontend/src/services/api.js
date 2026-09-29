@@ -1,4 +1,4 @@
-const BASE_URL = 'http://127.0.0.1:8000/api';
+const BASE_URL = import.meta.env.PROD ? '/api' : 'http://127.0.0.1:8000/api';
 
 export const api = {
   startSession: async (detectiveGender = 'f', caseId = 'sector-7', energy = null) => {
