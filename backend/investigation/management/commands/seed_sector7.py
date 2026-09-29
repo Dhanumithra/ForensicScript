@@ -427,7 +427,7 @@ class Command(BaseCommand):
                 'clue_unlock': None,
                 'energy_delta': 0,
                 'choices_json': [
-                    {'id': 'to_accuse', 'text': 'Confront Marcus Vance (Proceed to Final Accusation)', 'next_node_id': 'scene_5_accusation'},
+                    {'id': 'to_accuse', 'text': 'Confront the suspect - Accuse', 'next_node_id': 'scene_5_accusation'},
                     {'id': 'to_more_interrogate', 'text': 'Return to Holding Rooms to Interrogate Suspects Further', 'next_node_id': 'scene_3_interrogation_ready'},
                     {'id': 'restart_investigation_choice', 'text': '🔄 Not Enough Evidence: Return to Start of Investigation to Find Clues', 'next_node_id': 'scene_1_intro'}
                 ]

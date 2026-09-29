@@ -122,7 +122,7 @@ export const VisualNovelScreen = ({ engine }) => {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 15, scale: 0.98 }}
               transition={{ duration: 0.35, ease: 'easeOut' }}
-              className="h-[65vh] md:h-[78vh] object-contain filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.85)] max-w-none"
+              className="h-[65vh] md:h-[78vh] object-contain max-w-none"
             />
           )}
         </AnimatePresence>
@@ -175,7 +175,7 @@ export const VisualNovelScreen = ({ engine }) => {
       <DialogueBox
         currentNode={currentNode}
         onSelectChoice={(choice) => {
-          if (choice?.id === 'open_accusation_choice') {
+          if (choice?.id === 'open_accusation_choice' || choice?.id === 'to_accuse') {
             setIsAccusationOpen(true);
           } else if (choice?.id === 'back_to_interrogate_choice') {
             takeAction(choice);
