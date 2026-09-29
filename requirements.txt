@@ -1,0 +1,7 @@
+Django==4.2.11
+djangorestframework==3.15.1
+django-cors-headers==4.3.1
+psycopg[binary]
+dj-database-url==2.1.0
+whitenoise==6.6.0
+gunicorn==21.2.0

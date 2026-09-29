@@ -1,0 +1,15 @@
+{
+  "name": "forensicscript-workspace",
+  "version": "1.0.0",
+  "description": "Interactive Visual Novel Crime Story Engine with High-Stakes Forensic Deduction Mechanics",
+  "scripts": {
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && python manage.py runserver 8000",
+    "build:frontend": "cd frontend && npm run build",
+    "test:backend": "cd backend && python manage.py test investigation",
+    "seed:backend": "cd backend && python manage.py seed_sector7"
+  },
+  "keywords": ["detective", "visual-novel", "forensics", "react", "django", "crime"],
+  "author": "",
+  "license": "ISC"
+}

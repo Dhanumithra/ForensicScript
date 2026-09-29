@@ -1,0 +1,148 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    background-color: #020617;
+    color: #f8fafc;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    user-select: none;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    min-height: 100vh;
+  }
+}
+
+
+/* Neo-Noir Glassmorphism */
+.glass-panel {
+  background: rgba(10, 15, 25, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+}
+
+.glass-panel-danger {
+  background: rgba(28, 10, 14, 0.88);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  box-shadow: 0 8px 32px 0 rgba(239, 68, 68, 0.2);
+}
+
+.glass-button {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-button:hover {
+  background: rgba(56, 189, 248, 0.18);
+  border-color: rgba(56, 189, 248, 0.8);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Custom Sleek Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.6);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(56, 189, 248, 0.4);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(56, 189, 248, 0.7);
+}
+
+/* Vignette Effect */
+.vignette-overlay {
+  background: radial-gradient(circle, transparent 50%, rgba(5, 7, 12, 0.8) 100%);
+  pointer-events: none;
+}
+
+/* Crime Scene Neon Warning Tape & Marquee */
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-scroll-reverse {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 25s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+.animate-marquee-reverse {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll-reverse 25s linear infinite;
+}
+
+.neon-tape-yellow {
+  background: #facc15;
+  color: #020617;
+  box-shadow: 0 0 22px rgba(250, 204, 21, 0.55), 0 4px 12px rgba(0, 0, 0, 0.8);
+  border-top: 2px solid #fef08a;
+  border-bottom: 2px solid #ca8a04;
+}
+
+.neon-tape-cyan {
+  background: #22d3ee;
+  color: #020617;
+  box-shadow: 0 0 22px rgba(34, 211, 238, 0.55), 0 4px 12px rgba(0, 0, 0, 0.8);
+  border-top: 2px solid #a5f3fc;
+  border-bottom: 2px solid #0891b2;
+}
+
+.neon-tape-red {
+  background: #f43f5e;
+  color: #ffffff;
+  box-shadow: 0 0 22px rgba(244, 63, 94, 0.55), 0 4px 12px rgba(0, 0, 0, 0.8);
+  border-top: 2px solid #fecdd3;
+  border-bottom: 2px solid #be123c;
+}
+
+.hazard-stripes {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(250, 204, 21, 0.9) 0px,
+    rgba(250, 204, 21, 0.9) 12px,
+    rgba(15, 23, 42, 0.95) 12px,
+    rgba(15, 23, 42, 0.95) 24px
+  );
+}
+
+.hazard-stripes-cyan {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(34, 211, 238, 0.85) 0px,
+    rgba(34, 211, 238, 0.85) 12px,
+    rgba(15, 23, 42, 0.95) 12px,
+    rgba(15, 23, 42, 0.95) 24px
+  );
+}
+
