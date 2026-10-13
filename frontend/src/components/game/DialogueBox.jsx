@@ -17,7 +17,7 @@ export const DialogueBox = ({
   currentNode,
   onSelectChoice,
   profile,
-  detectiveGender = 'f',
+  _detectiveGender,
   unlockedClues = [],
   caseData,
   onOpenAccusation,
@@ -25,12 +25,12 @@ export const DialogueBox = ({
   onOpenDossier,
   onRestartInvestigation,
 }) => {
+  const fullText = currentNode?.text || '';
   const [displayedText, setDisplayedText] = useState('');
-  const [isTyping, setIsTyping] = useState(true);
+  const [isTyping, setIsTyping] = useState(Boolean(fullText));
   const textIndexRef = useRef(0);
   const timerRef = useRef(null);
 
-  const fullText = currentNode?.text || '';
   const speaker = currentNode?.speaker || 'DETECTIVE';
   const choices = currentNode?.choices_json || [];
 
@@ -44,16 +44,12 @@ export const DialogueBox = ({
   const hasMultipleChoices = !isConfrontationOrEnd && choices.length > 1;
   const singleChoice = !isConfrontationOrEnd && choices.length === 1 ? choices[0] : null;
 
-  // Smooth cinematic typewriter effect (32ms per character)
+  // Cinematic typewriter effect (snappy 20ms per character)
   useEffect(() => {
-    setDisplayedText('');
-    setIsTyping(true);
     textIndexRef.current = 0;
-
     if (timerRef.current) clearInterval(timerRef.current);
 
     if (!fullText) {
-      setIsTyping(false);
       return;
     }
 
@@ -70,7 +66,7 @@ export const DialogueBox = ({
         clearInterval(timerRef.current);
         setIsTyping(false);
       }
-    }, 30);
+    }, 20);
 
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);

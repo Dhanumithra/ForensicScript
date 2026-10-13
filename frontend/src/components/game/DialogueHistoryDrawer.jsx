@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, MessageSquare, ArrowDown, User, Shield, ChevronRight } from 'lucide-react';
+import { X, MessageSquare, ArrowDown, User } from 'lucide-react';
 import { getCharacterSprite } from '../../utils/assetHelper';
 
 export const DialogueHistoryDrawer = ({

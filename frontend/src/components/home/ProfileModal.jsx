@@ -1,32 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getCharacterSprite } from '../../utils/assetHelper';
 import { RANKS } from '../../utils/profileStorage';
 import {
   X,
-  User,
   Shield,
   Award,
   CheckCircle2,
   Save,
-  Sparkles,
 } from 'lucide-react';
 
-export const ProfileModal = ({ isOpen, onClose, profile, onSaveProfile }) => {
+const ProfileModalDialog = ({ onClose, profile, onSaveProfile }) => {
   const [firstName, setFirstName] = useState(profile?.firstName || 'Catherine');
   const [lastName, setLastName] = useState(profile?.lastName || 'Ward');
   const [gender, setGender] = useState(profile?.detectiveGender || 'f');
   const [savedSuccess, setSavedSuccess] = useState(false);
-
-  useEffect(() => {
-    if (isOpen && profile) {
-      setFirstName(profile.firstName || 'Catherine');
-      setLastName(profile.lastName || 'Ward');
-      setGender(profile.detectiveGender || 'f');
-    }
-  }, [isOpen, profile]);
-
-  if (!isOpen) return null;
 
   const spriteF = getCharacterSprite('detective_f_neutral');
   const spriteM = getCharacterSprite('detective_m_neutral');
@@ -259,5 +247,17 @@ export const ProfileModal = ({ isOpen, onClose, profile, onSaveProfile }) => {
         </motion.div>
       </div>
     </AnimatePresence>
+  );
+};
+
+export const ProfileModal = ({ isOpen, onClose, profile, onSaveProfile }) => {
+  if (!isOpen) return null;
+  return (
+    <ProfileModalDialog
+      key={`${profile?.id || 'd'}-${profile?.badgeNumber || 'b'}-${profile?.firstName || ''}`}
+      onClose={onClose}
+      profile={profile}
+      onSaveProfile={onSaveProfile}
+    />
   );
 };

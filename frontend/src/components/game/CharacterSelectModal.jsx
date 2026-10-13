@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Shield, Sparkles, UserCheck, Play } from 'lucide-react';
+import { Shield, UserCheck, Play } from 'lucide-react';
 import { getCharacterSprite } from '../../utils/assetHelper';
 
 export const CharacterSelectModal = ({ onSelectDetective }) => {

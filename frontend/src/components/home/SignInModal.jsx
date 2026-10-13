@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   X,
   ShieldCheck,
   KeyRound,
   Mail,
-  Badge,
   UserCheck,
   UserPlus,
   AlertTriangle,
@@ -14,7 +13,7 @@ import {
 } from 'lucide-react';
 import { registerDetective, loginDetective } from '../../utils/profileStorage';
 
-export const SignInModal = ({ isOpen, onClose, profile, onSignIn }) => {
+const SignInModalDialog = ({ onClose, profile, onSignIn }) => {
   const [activeTab, setActiveTab] = useState('login'); // 'login' | 'register'
 
   // Log in form state
@@ -30,18 +29,6 @@ export const SignInModal = ({ isOpen, onClose, profile, onSignIn }) => {
   // Feedback states
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-
-  useEffect(() => {
-    if (isOpen) {
-      setErrorMessage('');
-      setSuccessMessage('');
-      if (profile?.badgeNumber) {
-        setLoginBadgeId(profile.badgeNumber);
-      }
-    }
-  }, [isOpen, profile]);
-
-  if (!isOpen) return null;
 
   // Handle Log In ("Start Your Shift, Detective")
   const handleLoginSubmit = (e) => {
@@ -395,5 +382,17 @@ export const SignInModal = ({ isOpen, onClose, profile, onSignIn }) => {
         </motion.div>
       </div>
     </AnimatePresence>
+  );
+};
+
+export const SignInModal = ({ isOpen, onClose, profile, onSignIn }) => {
+  if (!isOpen) return null;
+  return (
+    <SignInModalDialog
+      key={profile?.badgeNumber || 'signin-dialog'}
+      onClose={onClose}
+      profile={profile}
+      onSignIn={onSignIn}
+    />
   );
 };

@@ -7,8 +7,6 @@ import {
   AlertOctagon,
   CheckCircle2,
   HelpCircle,
-  Sparkles,
-  ArrowRight,
 } from 'lucide-react';
 
 const SUSPECTS = [

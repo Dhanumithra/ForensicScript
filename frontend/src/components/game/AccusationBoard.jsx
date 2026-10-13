@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   X,
   Scale,
-  ShieldAlert,
   AlertTriangle,
   Gavel,
   CheckCircle2,

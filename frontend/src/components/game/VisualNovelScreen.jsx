@@ -173,6 +173,7 @@ export const VisualNovelScreen = ({ engine }) => {
 
       {/* 6. Bottom Dialogue Panel with Typewriter & Choices */}
       <DialogueBox
+        key={currentNode?.node_id || 'dialogue-node'}
         currentNode={currentNode}
         onSelectChoice={(choice) => {
           if (choice?.id === 'open_accusation_choice' || choice?.id === 'to_accuse') {

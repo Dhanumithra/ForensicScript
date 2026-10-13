@@ -18,6 +18,29 @@ from .serializers import (
     SyncEnergyRequestSerializer
 )
 
+# In-memory cache for static narrative data to eliminate repetitive database hits
+_NODE_CACHE = {}
+_CASE_CACHE = {}
+
+def get_cached_node(node_id):
+    if not node_id:
+        return None
+    if node_id not in _NODE_CACHE:
+        node = DialogueNode.objects.filter(node_id=node_id).first()
+        if node:
+            _NODE_CACHE[node_id] = node
+    return _NODE_CACHE.get(node_id)
+
+def get_cached_case(case_id):
+    if not case_id:
+        return None
+    if case_id not in _CASE_CACHE:
+        case = Case.objects.prefetch_related('clues').filter(id=case_id).first()
+        if case:
+            _CASE_CACHE[case_id] = case
+    return _CASE_CACHE.get(case_id)
+
+
 class StartSessionView(APIView):
     def post(self, request):
         serializer = StartSessionSerializer(data=request.data)
@@ -31,7 +54,7 @@ class StartSessionView(APIView):
         else:
             starting_energy = 50
 
-        case = get_object_or_404(Case, id=case_id)
+        case = get_cached_case(case_id) or get_object_or_404(Case, id=case_id)
         session = GameSession.objects.create(
             case=case,
             energy=starting_energy,
@@ -41,7 +64,7 @@ class StartSessionView(APIView):
             status='active' if starting_energy > 0 else 'game_over'
         )
 
-        initial_node = DialogueNode.objects.filter(node_id=case.initial_node_id).first()
+        initial_node = get_cached_node(case.initial_node_id)
         node_data = DialogueNodeSerializer(initial_node).data if initial_node else None
 
         return Response({
@@ -53,7 +76,7 @@ class StartSessionView(APIView):
 
 class SessionDetailView(APIView):
     def get(self, request, session_id):
-        session = get_object_or_404(GameSession, session_id=session_id)
+        session = get_object_or_404(GameSession.objects.select_related('case'), session_id=session_id)
 
         # Passive AP recharge: 1 AP per minute elapsed (Max 50 AP)
         if session.energy < 50 and session.updated_at:
@@ -62,9 +85,9 @@ class SessionDetailView(APIView):
                 session.energy = min(50, session.energy + minutes_elapsed)
                 if session.energy >= 50 and session.status == 'game_over':
                     session.status = 'active'
-                session.save()
+                session.save(update_fields=['energy', 'status', 'updated_at'])
 
-        current_node = DialogueNode.objects.filter(node_id=session.current_node_id).first()
+        current_node = get_cached_node(session.current_node_id)
         node_data = DialogueNodeSerializer(current_node).data if current_node else None
 
         return Response({
@@ -76,13 +99,13 @@ class SessionDetailView(APIView):
 
 class CaseDetailView(APIView):
     def get(self, request, case_id):
-        case = get_object_or_404(Case, id=case_id)
+        case = get_cached_case(case_id) or get_object_or_404(Case, id=case_id)
         return Response(CaseDetailSerializer(case).data)
 
 
 class DialogueNodeView(APIView):
     def get(self, request, node_id):
-        node = get_object_or_404(DialogueNode, node_id=node_id)
+        node = get_cached_node(node_id) or get_object_or_404(DialogueNode, node_id=node_id)
         return Response(DialogueNodeSerializer(node).data)
 
 
@@ -117,7 +140,7 @@ class ActionView(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         next_node_id = data['next_node_id']
-        node = get_object_or_404(DialogueNode, node_id=next_node_id)
+        node = get_cached_node(next_node_id) or get_object_or_404(DialogueNode, node_id=next_node_id)
 
         visited = list(session.visited_nodes or [])
         is_already_visited = next_node_id in visited
@@ -366,7 +389,7 @@ class ReinvestigateView(APIView):
 
         session.save()
 
-        initial_node = DialogueNode.objects.filter(node_id=initial_node_id).first()
+        initial_node = get_cached_node(initial_node_id)
         node_data = DialogueNodeSerializer(initial_node).data if initial_node else None
 
         return Response({

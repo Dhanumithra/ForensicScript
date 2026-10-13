@@ -297,20 +297,22 @@ export const useDetectiveEngine = () => {
   // Append dialogue to transcript history log
   useEffect(() => {
     if (!currentNode?.text) return;
-    setDialogueHistory((prev) => {
-      if (prev.length > 0 && prev[prev.length - 1].node_id === currentNode.node_id) {
-        return prev;
-      }
-      return [
-        ...prev,
-        {
-          node_id: currentNode.node_id,
-          speaker: currentNode.speaker || 'DETECTIVE',
-          text: currentNode.text,
-          sprite: currentNode.sprite,
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        },
-      ];
+    queueMicrotask(() => {
+      setDialogueHistory((prev) => {
+        if (prev.length > 0 && prev[prev.length - 1].node_id === currentNode.node_id) {
+          return prev;
+        }
+        return [
+          ...prev,
+          {
+            node_id: currentNode.node_id,
+            speaker: currentNode.speaker || 'DETECTIVE',
+            text: currentNode.text,
+            sprite: currentNode.sprite,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          },
+        ];
+      });
     });
   }, [currentNode]);
 
@@ -327,7 +329,7 @@ export const useDetectiveEngine = () => {
       }
     }
     showNotification('Restorative Coffee: Focus Restored to 50 AP', 'success');
-  }, [session?.session_id, showNotification]);
+  }, [session, showNotification]);
 
   const resumeWithRecoveredAp = useCallback(async () => {
     if (energy >= 50) {
@@ -343,7 +345,7 @@ export const useDetectiveEngine = () => {
     } else {
       showNotification(`Need at least 50 AP to resume (Currently: ${energy} AP). Recharging +1 AP/min.`, 'penalty');
     }
-  }, [energy, session?.session_id, showNotification]);
+  }, [energy, session, showNotification]);
 
   // Perform Node Choice Action
   const takeAction = async (choice) => {
@@ -414,6 +416,7 @@ export const useDetectiveEngine = () => {
       }
       return res;
     } catch (err) {
+      console.warn('Confrontation request failed:', err);
       playPenaltyBuzz();
       showNotification('Confrontation Failed', 'penalty');
       return null;

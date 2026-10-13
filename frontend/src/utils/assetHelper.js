@@ -29,3 +29,31 @@ export const getBackground = (name) => {
   // Public fallback
   return `/assets/backgrounds/${cleanName}.jpeg`;
 };
+
+// Preload all visual novel assets into browser memory cache for instantaneous transitions
+let isPreloaded = false;
+export const preloadAllAssets = () => {
+  if (isPreloaded || typeof window === 'undefined') return;
+  isPreloaded = true;
+
+  const preloadUrl = (url) => {
+    if (!url) return;
+    const img = new Image();
+    img.src = url;
+  };
+
+  const schedulePreload = () => {
+    Object.values(characterSprites).forEach((mod) => {
+      if (mod?.default) preloadUrl(mod.default);
+    });
+    Object.values(backgrounds).forEach((mod) => {
+      if (mod?.default) preloadUrl(mod.default);
+    });
+  };
+
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(schedulePreload, { timeout: 2000 });
+  } else {
+    setTimeout(schedulePreload, 150);
+  }
+};

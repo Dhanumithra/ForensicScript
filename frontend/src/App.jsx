@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDetectiveEngine } from './hooks/useDetectiveEngine';
 import { VisualNovelScreen } from './components/game/VisualNovelScreen';
 import { HomePage } from './components/home/HomePage';
 import { ProfileModal } from './components/home/ProfileModal';
 import { SignInModal } from './components/home/SignInModal';
+import { preloadAllAssets } from './utils/assetHelper';
 
 function App() {
   const engine = useDetectiveEngine();
+
+  useEffect(() => {
+    preloadAllAssets();
+  }, []);
   const {
     session,
     energy,
