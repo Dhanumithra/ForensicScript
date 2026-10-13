@@ -56,10 +56,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'forensic_backend.wsgi.application'
 
+# Vercel Serverless environment handling: /tmp is the only writable directory
+IS_VERCEL = 'VERCEL' in os.environ or os.environ.get('VERCEL') == '1'
+
+if IS_VERCEL:
+    import shutil
+    tmp_db_path = '/tmp/db.sqlite3'
+    orig_db_path = os.path.join(BASE_DIR, 'db.sqlite3')
+    if not os.path.exists(tmp_db_path) and os.path.exists(orig_db_path):
+        try:
+            shutil.copy2(orig_db_path, tmp_db_path)
+        except Exception as e:
+            print(f"Failed to copy SQLite database to /tmp: {e}")
+    db_target = tmp_db_path if os.path.exists(tmp_db_path) else (BASE_DIR / 'db.sqlite3')
+else:
+    db_target = BASE_DIR / 'db.sqlite3'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': db_target,
     }
 }
 

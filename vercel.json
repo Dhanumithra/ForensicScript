@@ -1,9 +1,13 @@
 {
+  "version": 2,
   "builds": [
     {
       "src": "backend/forensic_backend/wsgi.py",
       "use": "@vercel/python",
-      "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
+      "config": {
+        "maxLambdaSize": "15mb",
+        "includeFiles": "backend/**"
+      }
     },
     {
       "src": "frontend/package.json",
@@ -15,6 +19,14 @@
     {
       "src": "/api/(.*)",
       "dest": "backend/forensic_backend/wsgi.py"
+    },
+    {
+      "src": "/api",
+      "dest": "backend/forensic_backend/wsgi.py"
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "/frontend/assets/$1"
     },
     {
       "src": "/(.*)",
