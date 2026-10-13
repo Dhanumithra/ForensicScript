@@ -176,9 +176,18 @@ export const VisualNovelScreen = ({ engine }) => {
         key={currentNode?.node_id || 'dialogue-node'}
         currentNode={currentNode}
         onSelectChoice={(choice) => {
-          if (choice?.id === 'open_accusation_choice' || choice?.id === 'to_accuse') {
+          if (
+            choice?.id === 'open_accusation_choice' ||
+            choice?.id === 'to_accuse' ||
+            choice?.id?.includes('open_accusation') ||
+            choice?.id?.includes('to_accusation')
+          ) {
             setIsAccusationOpen(true);
-          } else if (choice?.id === 'back_to_interrogate_choice') {
+          } else if (
+            choice?.id === 'back_to_interrogate_choice' ||
+            choice?.id?.includes('open_interrogation') ||
+            choice?.id?.includes('to_interrogate')
+          ) {
             takeAction(choice);
             setIsInterrogationOpen(true);
           } else if (choice?.id === 'restart_investigation_choice') {

@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 from investigation.models import Case, Clue, DialogueNode
 
 class Command(BaseCommand):
-    help = 'Seed Case 2: The Phantom Heir murder mystery data, clues, and dialogue nodes'
+    help = 'Seed Case 2: The Phantom Heir murder mystery data, clues, and progressive dialogue nodes'
 
     def handle(self, *args, **options):
         self.stdout.write("Seeding Case 2: The Phantom Heir (Progressive Narrative Flow)...")
@@ -31,7 +31,7 @@ class Command(BaseCommand):
                 'clue_id': 'E1',
                 'name': 'Vitreous Potassium Assay',
                 'category': 'Pathology & Biochemistry',
-                'summary': "Syringe assay of fluid from Julian's ocular vitreous humor analyzed via ion spectrometry shows [K+] = 14.8 mmol/L.",
+                'summary': "Syringe assay of fluid from Julian's ocular vitreous humor analyzed via ion spectrometer shows [K+] = 14.8 mmol/L.",
                 'inference': "Vitreous potassium degrades at a steady rate independent of ambient room temperature, proving Julian died between 10:30 PM and 10:50 PM.",
                 'contradiction': "Demolishes the coroner's 02:00 AM estimate and invalidates the suspects' midnight-to-dawn alibis.",
                 'icon': 'eye'
@@ -91,30 +91,30 @@ class Command(BaseCommand):
             )
 
         nodes_data = [
-            # SCENE 1: THE OBSIDIAN STUDY (ARRIVAL)
+            # ===================== SCENE 1: ARRIVAL & THE OBSIDIAN STUDY =====================
             {
                 'node_id': 'c2_scene_1_intro',
                 'scene_number': 1,
                 'background': 'bg_manor_exterior',
                 'speaker': 'OFFICER MILLER',
                 'sprite': 'officer_miller_serious',
-                'text': "Detective! Thank god you're here. Lightning took out the coast road an hour ago. We're inside Sterling Manor. Billionaire Julian Sterling was found dead inside his biometric panic study.",
+                'text': "Detective! Rain and lightning have cut off the coast road. Julian Sterling, founder of Sterling Neural Dynamics, was discovered dead inside his biometric vault at 6:15 AM. The door was locked tight from the inside all night.",
                 'audio_cue': None,
                 'clue_unlock': None,
                 'energy_delta': 0,
                 'choices_json': [
                     {
+                        'id': 'c2_c1_miller_brief',
+                        'text': "What does security say about the study's lock status?",
+                        'next_node_id': 'c2_scene_1_security_brief',
+                        'energy_delta': 5,
+                        'clue_unlock': None
+                    },
+                    {
                         'id': 'c2_c1_enter',
                         'text': "Let's enter the Obsidian Study and inspect the crime scene.",
                         'next_node_id': 'c2_scene_1_vault_entry',
                         'energy_delta': 0,
-                        'clue_unlock': None
-                    },
-                    {
-                        'id': 'c2_c1_miller_alibi',
-                        'text': "What does security say about the study's lock status?",
-                        'next_node_id': 'c2_scene_1_security_brief',
-                        'energy_delta': 5,
                         'clue_unlock': None
                     }
                 ]
@@ -125,14 +125,14 @@ class Command(BaseCommand):
                 'background': 'bg_manor_exterior',
                 'speaker': 'OFFICER MILLER',
                 'sprite': 'officer_miller_neutral',
-                'text': "Rowan Brooks, head of manor security, logs the vault sealing at 10:42 PM. The door never opened. At 01:30 AM, Julian allegedly called the guard over intercom telling them not to disturb him.",
+                'text': "Rowan Brooks, head of security, logs the vault sealing at 10:42 PM. The door never opened. At 01:30 AM, Julian allegedly called over the intercom saying: 'Do not disturb me until the board meeting.' Yet the coroner estimates death at 02:00 AM.",
                 'audio_cue': None,
                 'clue_unlock': None,
                 'energy_delta': 0,
                 'choices_json': [
                     {
                         'id': 'c2_c1_proceed_vault',
-                        'text': "Lead me into the vault immediately.",
+                        'text': "An impossible locked-room puzzle. Lead me into the vault.",
                         'next_node_id': 'c2_scene_1_vault_entry',
                         'energy_delta': 0,
                         'clue_unlock': None
@@ -145,30 +145,44 @@ class Command(BaseCommand):
                 'background': 'bg_obsidian_study',
                 'speaker': 'DETECTIVE',
                 'sprite': None,
-                'text': "The Obsidian Study is freezing cold. Julian Sterling sits slumped motionless over his black marble desk. The 500-lb reinforced vault door is sealed tight with a glowing biometric thumb scanner.",
+                'text': "The Obsidian Study is freezing cold. Julian Sterling sits slumped motionless over his black marble desk. The 500-lb reinforced vault door is sealed tight with a glowing biometric thumb scanner. On the wall hums an automated climate control panel.",
                 'audio_cue': None,
                 'clue_unlock': None,
                 'energy_delta': 0,
                 'choices_json': [
                     {
                         'id': 'c2_c1_body_potassium',
-                        'text': "Extract vitreous fluid from Julian's eye with the portable ion spectrometer.",
+                        'text': "Extract ocular fluid from Julian's eye with the ion spectrometer.",
                         'next_node_id': 'c2_scene_1_vitreous',
                         'energy_delta': 10,
                         'clue_unlock': 'E1'
                     },
                     {
+                        'id': 'c2_c1_hvac',
+                        'text': "Inspect the automated climate control unit on the wall.",
+                        'next_node_id': 'c2_scene_1_hvac',
+                        'energy_delta': 10,
+                        'clue_unlock': 'E2'
+                    },
+                    {
                         'id': 'c2_c1_scanner_swab',
-                        'text': "Swab the recessed glass rim of the vault's exterior thumbprint reader.",
+                        'text': "Swab the recessed glass rim of the vault thumbprint scanner.",
                         'next_node_id': 'c2_scene_1_scanner',
                         'energy_delta': 10,
                         'clue_unlock': 'E3'
                     },
                     {
                         'id': 'c2_c1_kick_door',
-                        'text': "Slam your shoulder against the titanium vault door to test its locking bolts.",
+                        'text': "Attempt to shoulder-charge the heavy Faraday vault door.",
                         'next_node_id': 'c2_scene_1_kick',
                         'energy_delta': -15,
+                        'clue_unlock': None
+                    },
+                    {
+                        'id': 'c2_c1_to_scene2',
+                        'text': "Physical crime scene documented. Let's question Julian's eldest daughter, Vivienne Sterling.",
+                        'next_node_id': 'c2_scene_2_vivienne_intro',
+                        'energy_delta': 0,
                         'clue_unlock': None
                     }
                 ]
@@ -199,24 +213,31 @@ class Command(BaseCommand):
                 'background': 'bg_obsidian_study',
                 'speaker': 'DETECTIVE',
                 'sprite': None,
-                'text': "The ion spectrometer beeps: [K+] concentration is 14.8 mmol/L. Vitreous potassium degrades at a constant rate regardless of ambient chill. Julian died between 10:30 PM and 10:50 PM! Not 02:00 AM! (Clue E1 Acquired)",
+                'text': "The ion spectrometer beeps: [K+] concentration is 14.8 mmol/L. Vitreous potassium degrades at a constant rate regardless of ambient chill. Julian died between 10:30 PM and 10:50 PM! The coroner's 02:00 AM estimate was an illusion! (Clue E1 Acquired)",
                 'audio_cue': 'clue',
                 'clue_unlock': 'E1',
                 'energy_delta': 10,
                 'choices_json': [
                     {
-                        'id': 'c2_c1_to_hvac',
-                        'text': "Check the room's automated climate control panel for temperature logs.",
+                        'id': 'c2_c1_v_to_hvac',
+                        'text': "Inspect the automated climate control unit on the wall.",
                         'next_node_id': 'c2_scene_1_hvac',
                         'energy_delta': 10,
                         'clue_unlock': 'E2'
                     },
                     {
-                        'id': 'c2_c1_to_scanner',
-                        'text': "Inspect the biometric thumbprint scanner glass rim.",
+                        'id': 'c2_c1_v_to_scanner',
+                        'text': "Swab the biometric thumbprint scanner glass rim.",
                         'next_node_id': 'c2_scene_1_scanner',
                         'energy_delta': 10,
                         'clue_unlock': 'E3'
+                    },
+                    {
+                        'id': 'c2_c1_v_to_hub',
+                        'text': "Return to the study center.",
+                        'next_node_id': 'c2_scene_1_vault_entry',
+                        'energy_delta': 0,
+                        'clue_unlock': None
                     }
                 ]
             },
@@ -232,16 +253,23 @@ class Command(BaseCommand):
                 'energy_delta': 10,
                 'choices_json': [
                     {
-                        'id': 'c2_c1_to_safe',
-                        'text': "Examine Julian's biometric desktop safe for documents.",
-                        'next_node_id': 'c2_scene_1_safe',
+                        'id': 'c2_c1_h_to_vitreous',
+                        'text': "Extract ocular fluid from Julian's eye with the ion spectrometer.",
+                        'next_node_id': 'c2_scene_1_vitreous',
                         'energy_delta': 10,
-                        'clue_unlock': 'E5'
+                        'clue_unlock': 'E1'
                     },
                     {
-                        'id': 'c2_c1_to_security',
-                        'text': "Move to the Security Hub to inspect intercom recordings.",
-                        'next_node_id': 'c2_scene_2_security',
+                        'id': 'c2_c1_h_to_scanner',
+                        'text': "Swab the biometric thumbprint scanner glass rim.",
+                        'next_node_id': 'c2_scene_1_scanner',
+                        'energy_delta': 10,
+                        'clue_unlock': 'E3'
+                    },
+                    {
+                        'id': 'c2_c1_h_to_hub',
+                        'text': "Return to the study center.",
+                        'next_node_id': 'c2_scene_1_vault_entry',
                         'energy_delta': 0,
                         'clue_unlock': None
                     }
@@ -259,191 +287,389 @@ class Command(BaseCommand):
                 'energy_delta': 10,
                 'choices_json': [
                     {
-                        'id': 'c2_c1_scanner_to_safe',
-                        'text': "Check Julian's biometric desktop safe before leaving the room.",
-                        'next_node_id': 'c2_scene_1_safe',
+                        'id': 'c2_c1_s_to_vitreous',
+                        'text': "Extract ocular fluid from Julian's eye with the ion spectrometer.",
+                        'next_node_id': 'c2_scene_1_vitreous',
+                        'energy_delta': 10,
+                        'clue_unlock': 'E1'
+                    },
+                    {
+                        'id': 'c2_c1_s_to_hvac',
+                        'text': "Inspect the automated climate control unit on the wall.",
+                        'next_node_id': 'c2_scene_1_hvac',
+                        'energy_delta': 10,
+                        'clue_unlock': 'E2'
+                    },
+                    {
+                        'id': 'c2_c1_s_to_hub',
+                        'text': "Return to the study center.",
+                        'next_node_id': 'c2_scene_1_vault_entry',
+                        'energy_delta': 0,
+                        'clue_unlock': None
+                    }
+                ]
+            },
+
+            # ===================== SCENE 2: VIVIENNE STERLING'S SUITE =====================
+            {
+                'node_id': 'c2_scene_2_vivienne_intro',
+                'scene_number': 2,
+                'background': 'bg_obsidian_study',
+                'speaker': 'VIVIENNE STERLING',
+                'sprite': 'vivienne_neutral',
+                'text': "Detective. My legal counsel is already en route. I spent the entire evening on camera at the Metropolitan Neuro-Gala downtown until 02:30 AM with three city councilors. You have no legal standing to harass me.",
+                'audio_cue': None,
+                'clue_unlock': None,
+                'energy_delta': 0,
+                'choices_json': [
+                    {
+                        'id': 'c2_c2_vivienne_safe',
+                        'text': "Inspect the desktop safe and her damp gala trench coat draped over the chair.",
+                        'next_node_id': 'c2_scene_2_safe',
                         'energy_delta': 10,
                         'clue_unlock': 'E5'
                     },
                     {
-                        'id': 'c2_c1_scanner_to_hvac',
-                        'text': "Examine the study's HVAC climate unit on the wall.",
-                        'next_node_id': 'c2_scene_1_hvac',
-                        'energy_delta': 10,
-                        'clue_unlock': 'E2'
+                        'id': 'c2_c2_vivienne_trust',
+                        'text': "Inquire about her father's multi-billion-dollar estate trust.",
+                        'next_node_id': 'c2_scene_2_vivienne_trust',
+                        'energy_delta': 0,
+                        'clue_unlock': None
+                    },
+                    {
+                        'id': 'c2_c2_vivienne_reckless',
+                        'text': "Accuse Vivienne of putting poison in Julian's evening scotch.",
+                        'next_node_id': 'c2_scene_2_vivienne_reckless',
+                        'energy_delta': -15,
+                        'clue_unlock': None
                     }
                 ]
             },
             {
-                'node_id': 'c2_scene_1_safe',
-                'scene_number': 1,
+                'node_id': 'c2_scene_2_vivienne_trust',
+                'scene_number': 2,
+                'background': 'bg_obsidian_study',
+                'speaker': 'VIVIENNE STERLING',
+                'sprite': 'vivienne_defensive',
+                'text': "Father built Sterling Neural Dynamics through ruthless paranoia. He treated his own children like hostile corporate acquisitions. But I didn't murder him—I didn't need to.",
+                'audio_cue': None,
+                'clue_unlock': None,
+                'energy_delta': 0,
+                'choices_json': [
+                    {
+                        'id': 'c2_c2_trust_to_safe',
+                        'text': "Inspect the desktop safe and her damp gala trench coat.",
+                        'next_node_id': 'c2_scene_2_safe',
+                        'energy_delta': 10,
+                        'clue_unlock': 'E5'
+                    },
+                    {
+                        'id': 'c2_c2_trust_to_intro',
+                        'text': "Return to questioning Vivienne.",
+                        'next_node_id': 'c2_scene_2_vivienne_intro',
+                        'energy_delta': 0,
+                        'clue_unlock': None
+                    }
+                ]
+            },
+            {
+                'node_id': 'c2_scene_2_vivienne_reckless',
+                'scene_number': 2,
+                'background': 'bg_obsidian_study',
+                'speaker': 'VIVIENNE STERLING',
+                'sprite': 'vivienne_defensive',
+                'text': "Julian's scotch was completely untouched on his desk, you incompetent amateur! The forensic team already confirmed zero oral ingestion. Slander me without proof again and I will see your badge revoked! (-15 AP)",
+                'audio_cue': 'penalty',
+                'clue_unlock': None,
+                'energy_delta': -15,
+                'choices_json': [
+                    {
+                        'id': 'c2_c2_reckless_to_safe',
+                        'text': "Focus on hard evidence: examine the desktop safe.",
+                        'next_node_id': 'c2_scene_2_safe',
+                        'energy_delta': 10,
+                        'clue_unlock': 'E5'
+                    },
+                    {
+                        'id': 'c2_c2_reckless_to_intro',
+                        'text': "Apologize and step back.",
+                        'next_node_id': 'c2_scene_2_vivienne_intro',
+                        'energy_delta': 0,
+                        'clue_unlock': None
+                    }
+                ]
+            },
+            {
+                'node_id': 'c2_scene_2_safe',
+                'scene_number': 2,
                 'background': 'bg_obsidian_study',
                 'speaker': 'DETECTIVE',
                 'sprite': None,
-                'text': "The safe pops open! An unsent codicil timestamped 09:00 PM confirms Dr. Cedric Laurent is Julian's secret biological son ('The Phantom Heir') — but disinherits him completely for selling proprietary patents on the black market! (Clue E5 Acquired)",
+                'text': "The safe pops open! An unsent holographic codicil timestamped 09:00 PM contains DNA confirmation that Dr. Cedric Laurent is Julian's illegitimate biological son ('The Phantom Heir')! But Julian discovered Cedric was trafficking neural patents on the black market and completely disinherited him! (Clue E5 Acquired)",
                 'audio_cue': 'clue',
                 'clue_unlock': 'E5',
                 'energy_delta': 10,
                 'choices_json': [
                     {
-                        'id': 'c2_c1_safe_to_security',
-                        'text': "Head to the Security Operations Center to question Rowan Brooks.",
-                        'next_node_id': 'c2_scene_2_security',
+                        'id': 'c2_c2_safe_to_security',
+                        'text': "The disinheritance motive is explosive. Proceed to the Manor Security Center to question Rowan Brooks.",
+                        'next_node_id': 'c2_scene_3_security',
                         'energy_delta': 0,
                         'clue_unlock': None
                     },
                     {
-                        'id': 'c2_c1_safe_to_lab',
-                        'text': "Visit the Neural Dynamics clinic annex to check Cedric's monitoring console.",
-                        'next_node_id': 'c2_scene_3_clinic',
+                        'id': 'c2_c2_confront_codicil',
+                        'text': "Confront Vivienne with this secret disinheritance codicil.",
+                        'next_node_id': 'c2_scene_2_vivienne_confront_codicil',
+                        'energy_delta': 0,
+                        'clue_unlock': None
+                    }
+                ]
+            },
+            {
+                'node_id': 'c2_scene_2_vivienne_confront_codicil',
+                'scene_number': 2,
+                'background': 'bg_obsidian_study',
+                'speaker': 'VIVIENNE STERLING',
+                'sprite': 'vivienne_defensive',
+                'text': "A secret brother?! Cedric... that quiet neurologist was father's blood all along?! And father cut him off completely hours before dying?! Detective... whoever controlled the manor's systems killed him, not me!",
+                'audio_cue': None,
+                'clue_unlock': None,
+                'energy_delta': 0,
+                'choices_json': [
+                    {
+                        'id': 'c2_c2_confront_to_security',
+                        'text': "Head immediately to the Manor Security Operations Hub to question Rowan Brooks.",
+                        'next_node_id': 'c2_scene_3_security',
                         'energy_delta': 0,
                         'clue_unlock': None
                     }
                 ]
             },
 
-            # SCENE 2: THE MANOR SECURITY OPERATIONS HUB
+            # ===================== SCENE 3: MANOR SECURITY OPERATIONS HUB =====================
             {
-                'node_id': 'c2_scene_2_security',
-                'scene_number': 2,
+                'node_id': 'c2_scene_3_security',
+                'scene_number': 3,
                 'background': 'bg_manor_security',
                 'speaker': 'ROWAN BROOKS',
                 'sprite': 'rowan_neutral',
-                'text': "Detective. I run security here. The exterior perimeter was locked all night. At 01:30 AM, Julian's intercom was patched directly to this console. I have the recording on file.",
+                'text': "Detective. I'm Rowan Brooks, head of manor security. The perimeter was sealed tight. At 10:42 PM, the master vault door locked from the inside. At 01:30 AM, Julian himself called over the security intercom telling us not to disturb him until morning. Here's the audio file.",
                 'audio_cue': None,
                 'clue_unlock': None,
                 'energy_delta': 0,
                 'choices_json': [
                     {
-                        'id': 'c2_c2_analyze_audio',
-                        'text': "Run audio waveform spectral analysis on the 01:30 AM intercom call.",
-                        'next_node_id': 'c2_scene_2_audio',
+                        'id': 'c2_c3_analyze_audio',
+                        'text': "Run spectral waveform audio analysis and digital filtering on the 01:30 AM intercom recording.",
+                        'next_node_id': 'c2_scene_3_audio',
                         'energy_delta': 10,
                         'clue_unlock': 'E6'
                     },
                     {
-                        'id': 'c2_c2_accuse_rowan_wildly',
-                        'text': "You're lying, Brooks! You murdered him and turned off the cameras!",
-                        'next_node_id': 'c2_scene_2_rowan_wild',
+                        'id': 'c2_c3_rowan_protocol',
+                        'text': "Ask Brooks why no one visually checked on Julian after the intercom call.",
+                        'next_node_id': 'c2_scene_3_rowan_protocol',
+                        'energy_delta': 0,
+                        'clue_unlock': None
+                    },
+                    {
+                        'id': 'c2_c3_rowan_wild',
+                        'text': "Accuse Brooks of shooting Julian through the vault door.",
+                        'next_node_id': 'c2_scene_3_rowan_wild',
                         'energy_delta': -15,
                         'clue_unlock': None
                     }
                 ]
             },
             {
-                'node_id': 'c2_scene_2_rowan_wild',
-                'scene_number': 2,
+                'node_id': 'c2_scene_3_rowan_protocol',
+                'scene_number': 3,
                 'background': 'bg_manor_security',
                 'speaker': 'ROWAN BROOKS',
-                'sprite': 'rowan_tense',
-                'text': "Watch your mouth, Detective. I was in this chair during the 01:30 AM broadcast with three junior officers. Produce proof or get off my deck. (-15 AP)",
-                'audio_cue': 'penalty',
+                'sprite': 'rowan_neutral',
+                'text': "Julian was obsessive about his biometric privacy vault. His protocol was absolute: when that vault door locks, no guard disturbs him under penalty of immediate termination.",
+                'audio_cue': None,
                 'clue_unlock': None,
-                'energy_delta': -15,
+                'energy_delta': 0,
                 'choices_json': [
                     {
-                        'id': 'c2_c2_rowan_recheck_audio',
-                        'text': "Calm down and run spectral filtering on the intercom recording.",
-                        'next_node_id': 'c2_scene_2_audio',
+                        'id': 'c2_c3_proto_to_audio',
+                        'text': "Run spectral audio analysis on that 01:30 AM intercom call.",
+                        'next_node_id': 'c2_scene_3_audio',
                         'energy_delta': 10,
                         'clue_unlock': 'E6'
                     }
                 ]
             },
             {
-                'node_id': 'c2_scene_2_audio',
-                'scene_number': 2,
+                'node_id': 'c2_scene_3_rowan_wild',
+                'scene_number': 3,
+                'background': 'bg_manor_security',
+                'speaker': 'ROWAN BROOKS',
+                'sprite': 'rowan_tense',
+                'text': "Shooting through an 8-inch Faraday-shielded titanium door? Are you out of your mind, Detective? That door stops anti-tank rounds. Think before you slander my men. (-15 AP)",
+                'audio_cue': 'penalty',
+                'clue_unlock': None,
+                'energy_delta': -15,
+                'choices_json': [
+                    {
+                        'id': 'c2_c3_wild_to_audio',
+                        'text': "Calm down and analyze the 01:30 AM intercom recording.",
+                        'next_node_id': 'c2_scene_3_audio',
+                        'energy_delta': 10,
+                        'clue_unlock': 'E6'
+                    }
+                ]
+            },
+            {
+                'node_id': 'c2_scene_3_audio',
+                'scene_number': 3,
                 'background': 'bg_manor_security',
                 'speaker': 'DETECTIVE',
                 'sprite': None,
-                'text': "Spectral waveform analysis flags a 19.2 kHz high-frequency compression artifact and an acoustic neural watermark matching 'VocalSynth-Pro'! The voice call was an AI deepfake! (Clue E6 Acquired)",
+                'text': "Spectral waveform analysis flags a 19.2 kHz high-frequency digital aliasing artifact and an acoustic codec watermark matching 'VocalSynth-Pro'! The voice call was an AI deepfake calibrated on lab neural synthesis software! (Clue E6 Acquired)",
                 'audio_cue': 'clue',
                 'clue_unlock': 'E6',
                 'energy_delta': 10,
                 'choices_json': [
                     {
-                        'id': 'c2_c2_to_clinic',
-                        'text': "Proceed to the clinic annex to inspect the neural telemetry feed.",
-                        'next_node_id': 'c2_scene_3_clinic',
+                        'id': 'c2_c3_to_clinic',
+                        'text': "The deepfake was calibrated on clinical neural software. Proceed to Dr. Cedric Laurent's clinic annex.",
+                        'next_node_id': 'c2_scene_4_clinic',
+                        'energy_delta': 0,
+                        'clue_unlock': None
+                    },
+                    {
+                        'id': 'c2_c3_audio_followup',
+                        'text': "Question Brooks about who had access to VocalSynth-Pro.",
+                        'next_node_id': 'c2_scene_3_audio_followup',
+                        'energy_delta': 0,
+                        'clue_unlock': None
+                    }
+                ]
+            },
+            {
+                'node_id': 'c2_scene_3_audio_followup',
+                'scene_number': 3,
+                'background': 'bg_manor_security',
+                'speaker': 'ROWAN BROOKS',
+                'sprite': 'rowan_tense',
+                'text': "VocalSynth-Pro? That's proprietary neural speech synthesis firmware. Only Dr. Laurent's laboratory workstations run that suite. If that call was faked, someone in the clinic engineered it.",
+                'audio_cue': None,
+                'clue_unlock': None,
+                'energy_delta': 0,
+                'choices_json': [
+                    {
+                        'id': 'c2_c3_followup_to_clinic',
+                        'text': "Proceed immediately to the Neural Dynamics Clinic Annex.",
+                        'next_node_id': 'c2_scene_4_clinic',
                         'energy_delta': 0,
                         'clue_unlock': None
                     }
                 ]
             },
 
-            # SCENE 3: THE NEURAL DYNAMICS CLINIC ANNEX
+            # ===================== SCENE 4: NEURAL DYNAMICS CLINIC ANNEX =====================
             {
-                'node_id': 'c2_scene_3_clinic',
-                'scene_number': 3,
+                'node_id': 'c2_scene_4_clinic',
+                'scene_number': 4,
                 'background': 'bg_neural_lab',
                 'speaker': 'DR. CEDRIC LAURENT',
                 'sprite': 'cedric_neutral',
-                'text': "Ah, Detective. A heartbreaking tragedy. I was monitoring Julian's experimental neural telemetry right here all night. His brainwaves were normal until a sudden catastrophic cardiac collapse at 02:00 AM.",
+                'text': "Welcome, Detective. A heartbreaking tragedy. I was monitoring Julian's experimental neural telemetry right here all night. His brainwave readings were completely stable until a sudden catastrophic cardiac collapse at 02:00 AM.",
                 'audio_cue': None,
                 'clue_unlock': None,
                 'energy_delta': 0,
                 'choices_json': [
                     {
-                        'id': 'c2_c3_telemetry_audit',
-                        'text': "Audit the Fourier transform pattern of Julian's recorded EEG feed.",
-                        'next_node_id': 'c2_scene_3_telemetry',
+                        'id': 'c2_c4_telemetry',
+                        'text': "Audit the raw mathematical Fourier transform pattern of Julian's recorded EEG feed on the medical console.",
+                        'next_node_id': 'c2_scene_4_telemetry',
                         'energy_delta': 10,
                         'clue_unlock': 'E4'
                     },
                     {
-                        'id': 'c2_c3_accuse_cedric_early',
-                        'text': "You're his personal doctor, Cedric. You poisoned his bedtime pills!",
-                        'next_node_id': 'c2_scene_3_cedric_early',
+                        'id': 'c2_c4_cedric_chat',
+                        'text': "Ask Dr. Laurent about his medical relationship with Julian and his neural research.",
+                        'next_node_id': 'c2_scene_4_cedric_chat',
+                        'energy_delta': 0,
+                        'clue_unlock': None
+                    },
+                    {
+                        'id': 'c2_c4_cedric_reckless',
+                        'text': "Blurt out that you know he poisoned Julian's bedtime pills.",
+                        'next_node_id': 'c2_scene_4_cedric_reckless',
                         'energy_delta': -15,
                         'clue_unlock': None
                     }
                 ]
             },
             {
-                'node_id': 'c2_scene_3_cedric_early',
-                'scene_number': 3,
+                'node_id': 'c2_scene_4_cedric_chat',
+                'scene_number': 4,
                 'background': 'bg_neural_lab',
                 'speaker': 'DR. CEDRIC LAURENT',
                 'sprite': 'cedric_neutral',
-                'text': "Julian took zero pills tonight, Detective. His evening scotch was completely untouched on his desk. Wild guesses won't impress the district attorney. (-15 AP)",
-                'audio_cue': 'penalty',
+                'text': "Julian was a pioneer, but demanding. I dedicated years of my life to perfecting his neural implant architecture. His mind was brilliant, right until his heart failed at 02:00 AM.",
+                'audio_cue': None,
                 'clue_unlock': None,
-                'energy_delta': -15,
+                'energy_delta': 0,
                 'choices_json': [
                     {
-                        'id': 'c2_c3_recheck_eeg',
-                        'text': "Examine the raw mathematical telemetry feed on his server.",
-                        'next_node_id': 'c2_scene_3_telemetry',
+                        'id': 'c2_c4_chat_to_telemetry',
+                        'text': "Audit the raw mathematical EEG telemetry on his workstation.",
+                        'next_node_id': 'c2_scene_4_telemetry',
                         'energy_delta': 10,
                         'clue_unlock': 'E4'
                     }
                 ]
             },
             {
-                'node_id': 'c2_scene_3_telemetry',
-                'scene_number': 3,
+                'node_id': 'c2_scene_4_cedric_reckless',
+                'scene_number': 4,
+                'background': 'bg_neural_lab',
+                'speaker': 'DR. CEDRIC LAURENT',
+                'sprite': 'cedric_neutral',
+                'text': "Julian took zero medication tonight, Detective. His vitals showed no metabolic breakdown from oral toxins. Wild accusations without clinical data will only embarrass you in court. (-15 AP)",
+                'audio_cue': 'penalty',
+                'clue_unlock': None,
+                'energy_delta': -15,
+                'choices_json': [
+                    {
+                        'id': 'c2_c4_reckless_to_telemetry',
+                        'text': "Examine the raw EEG server logs on his console.",
+                        'next_node_id': 'c2_scene_4_telemetry',
+                        'energy_delta': 10,
+                        'clue_unlock': 'E4'
+                    }
+                ]
+            },
+            {
+                'node_id': 'c2_scene_4_telemetry',
+                'scene_number': 4,
                 'background': 'bg_neural_lab',
                 'speaker': 'DETECTIVE',
                 'sprite': None,
-                'text': "Found it! The EEG data from 11:00 PM to 02:00 AM has the exact same mathematical Fourier transform as an archive baseline recorded three days ago! The 'live' vitals were an automated playback loop! (Clue E4 Acquired)",
+                'text': "Found the glitch! The EEG telemetry transmitted between 11:00 PM and 02:00 AM has an identical mathematical Fourier transform to an archive baseline recorded three days ago! The 'live vitals' were an automated playback loop running on a scheduled cron-job! (Clue E4 Acquired)",
                 'audio_cue': 'clue',
                 'clue_unlock': 'E4',
                 'energy_delta': 10,
                 'choices_json': [
                     {
-                        'id': 'c2_c3_to_interrogate',
-                        'text': "Summon the suspects to the manor interrogation wing for formal confrontation.",
-                        'next_node_id': 'c2_scene_4_interrogation_intro',
+                        'id': 'c2_c4_to_interrogate',
+                        'text': "All 6 forensic clues verified. Summon all three suspects to the Interrogation Wing!",
+                        'next_node_id': 'c2_scene_5_interrogation_intro',
                         'energy_delta': 0,
                         'clue_unlock': None
                     }
                 ]
             },
 
-            # SCENE 4: SUSPECT CONFRONTATION WING
+            # ===================== SCENE 5: SUSPECT CONFRONTATION & GRAND INDICTMENT =====================
             {
-                'node_id': 'c2_scene_4_interrogation_intro',
-                'scene_number': 4,
+                'node_id': 'c2_scene_5_interrogation_intro',
+                'scene_number': 5,
                 'background': 'bg_interrogation_room',
                 'speaker': 'OFFICER MILLER',
                 'sprite': 'officer_miller_neutral',
@@ -453,15 +679,15 @@ class Command(BaseCommand):
                 'energy_delta': 0,
                 'choices_json': [
                     {
-                        'id': 'c2_c4_open_interrogation',
+                        'id': 'c2_open_interrogation',
                         'text': "Open Interrogation Chamber: Expose Suspect Contradictions [I]",
-                        'next_node_id': 'c2_scene_4_interrogation_active',
+                        'next_node_id': 'c2_scene_5_interrogation_active',
                         'energy_delta': 0,
                         'clue_unlock': None
                     },
                     {
-                        'id': 'c2_c4_ready_to_accuse',
-                        'text': "I have sufficient evidence. Proceed directly to the Final Indictment [A]",
+                        'id': 'c2_open_accusation_choice',
+                        'text': "I have gathered all the evidence. Proceed to the Final Indictment [A]",
                         'next_node_id': 'c2_scene_5_accusation',
                         'energy_delta': 0,
                         'clue_unlock': None
@@ -469,8 +695,8 @@ class Command(BaseCommand):
                 ]
             },
             {
-                'node_id': 'c2_scene_4_interrogation_active',
-                'scene_number': 4,
+                'node_id': 'c2_scene_5_interrogation_active',
+                'scene_number': 5,
                 'background': 'bg_interrogation_room',
                 'speaker': 'DETECTIVE',
                 'sprite': None,
@@ -480,16 +706,21 @@ class Command(BaseCommand):
                 'energy_delta': 0,
                 'choices_json': [
                     {
-                        'id': 'c2_c4_to_accusation_board',
+                        'id': 'c2_open_accusation_choice',
                         'text': "Proceed to Final Indictment & Warrant Execution Board [A]",
                         'next_node_id': 'c2_scene_5_accusation',
+                        'energy_delta': 0,
+                        'clue_unlock': None
+                    },
+                    {
+                        'id': 'c2_back_to_room',
+                        'text': "Review suspect statements with Officer Miller.",
+                        'next_node_id': 'c2_scene_5_interrogation_intro',
                         'energy_delta': 0,
                         'clue_unlock': None
                     }
                 ]
             },
-
-            # SCENE 5: FINAL ACCUSATION
             {
                 'node_id': 'c2_scene_5_accusation',
                 'scene_number': 5,
@@ -502,16 +733,16 @@ class Command(BaseCommand):
                 'energy_delta': 0,
                 'choices_json': [
                     {
-                        'id': 'c2_open_accusation_choice',
-                        'text': "Present Formal Indictment Warrant to Prosecutor [A]",
+                        'id': 'open_accusation_choice',
+                        'text': "Deliver Grand Indictment Warrant to Prosecutor [A]",
                         'next_node_id': 'c2_scene_5_accusation',
                         'energy_delta': 0,
                         'clue_unlock': None
                     },
                     {
-                        'id': 'c2_back_to_interrogate_choice',
+                        'id': 'to_interrogate',
                         'text': "Return to Interrogation Room to re-examine suspect alibis [I]",
-                        'next_node_id': 'c2_scene_4_interrogation_intro',
+                        'next_node_id': 'c2_scene_5_interrogation_intro',
                         'energy_delta': 0,
                         'clue_unlock': None
                     }
