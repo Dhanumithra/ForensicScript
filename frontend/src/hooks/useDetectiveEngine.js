@@ -136,9 +136,6 @@ export const useDetectiveEngine = () => {
   useEffect(() => {
     const hydrateSession = async () => {
       try {
-        const caseRes = await api.getCase('sector-7');
-        setCaseData(caseRes);
-
         const currentPersistentAp = getInitialAp();
         setEnergy(currentPersistentAp);
 
@@ -146,6 +143,11 @@ export const useDetectiveEngine = () => {
         if (savedSessionId) {
           const res = await api.getSession(savedSessionId);
           setSession(res.session);
+
+          const activeCaseId = res.case?.id || res.session.case || 'sector-7';
+          const caseRes = await api.getCase(activeCaseId);
+          setCaseData(caseRes);
+
           // Strict max 50 AP: take session energy capped at 50
           const activeAp = Math.min(50, res.session.energy);
           setEnergy(activeAp);
@@ -158,11 +160,18 @@ export const useDetectiveEngine = () => {
           } else if (res.session.status === 'solved') {
             setIsVictorious(true);
           }
+        } else {
+          const caseRes = await api.getCase('sector-7');
+          setCaseData(caseRes);
         }
       } catch (err) {
         console.warn('Could not restore saved session, clearing storage:', err);
         localStorage.removeItem(STORAGE_KEY);
         setSession(null);
+        try {
+          const defaultCase = await api.getCase('sector-7');
+          setCaseData(defaultCase);
+        } catch {}
       } finally {
         setIsLoading(false);
       }
@@ -172,7 +181,7 @@ export const useDetectiveEngine = () => {
   }, [profile.detectiveGender]);
 
   // Start New Game or Restart Case (Strictly maintains current AP - max 50 AP)
-  const startNewGame = async (gender = null) => {
+  const startNewGame = async (gender = null, caseId = 'sector-7') => {
     setIsLoading(true);
     initAudio(); // Satisfies browser autoplay policy on click
     const activeGender = gender || profile.detectiveGender || 'f';
@@ -180,8 +189,11 @@ export const useDetectiveEngine = () => {
       localStorage.removeItem(STORAGE_KEY);
       // Strictly maintain whatever AP the player currently holds (max 50)
       const currentAp = Math.min(50, Math.max(0, energy));
-      const res = await api.startSession(activeGender, 'sector-7', currentAp);
+      const res = await api.startSession(activeGender, caseId, currentAp);
       localStorage.setItem(STORAGE_KEY, res.session.session_id);
+
+      const caseRes = await api.getCase(caseId);
+      setCaseData(caseRes);
 
       setSession(res.session);
       setEnergy(res.session.energy);
@@ -204,7 +216,7 @@ export const useDetectiveEngine = () => {
       if (isDepleted) {
         showNotification('Focus Depleted (0/50 AP). Lockout active: Wait for recharge (+1 AP/min).', 'penalty', 5000);
       } else {
-        showNotification(`Investigation Active (${res.session.energy}/50 AP)`, 'info');
+        showNotification(`Investigation Active: ${caseRes?.title || 'Case'} (${res.session.energy}/50 AP)`, 'info');
       }
     } catch (err) {
       console.error('Error starting game:', err);
@@ -436,7 +448,8 @@ export const useDetectiveEngine = () => {
         setIsAccusationOpen(false);
 
         // Mark case solved and trigger promotion in profile!
-        const updatedProfile = markCaseSolved('sector-7');
+        const solvedCaseId = session?.case || caseData?.id || 'sector-7';
+        const updatedProfile = markCaseSolved(solvedCaseId);
         setProfile(updatedProfile);
 
         showNotification('Case Solved! Indictment Confirmed', 'success', 6000);

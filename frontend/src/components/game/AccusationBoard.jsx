@@ -10,13 +10,13 @@ import {
   RotateCcw,
 } from 'lucide-react';
 
-const SUSPECT_CHOICES = [
+const CASE_1_SUSPECTS = [
   { id: 'elena', label: 'Dr. Elena Cruz', desc: 'Senior Spectrometry Lead (Stole the sensor USB drive)' },
   { id: 'kevin', label: 'Kevin Lin', desc: 'Firmware Engineer (Accepted $5,000 crypto bribe to blackout CCTV)' },
   { id: 'vance', label: 'Marcus Vance', desc: 'CEO & Founder (Faced regulatory ruin over falsified sensor yields)' },
 ];
 
-const METHOD_CHOICES = [
+const CASE_1_METHODS = [
   {
     id: 'ventilation',
     label: 'Ceiling Air Duct Infiltration',
@@ -34,6 +34,30 @@ const METHOD_CHOICES = [
   },
 ];
 
+const CASE_2_SUSPECTS = [
+  { id: 'vivienne', label: 'Vivienne Sterling', desc: 'Julian\'s Eldest Daughter & CCO (Entered grounds at 10:38 PM to steal bearer bonds)' },
+  { id: 'rowan', label: 'Rowan Brooks', desc: 'Head of Security (Accepted $250k Cayman bribe to mute gate cameras & environmental alerts)' },
+  { id: 'cedric', label: 'Dr. Cedric Laurent', desc: 'Personal Neurologist & Secret Illegitimate Son (Disinherited at 09:00 PM for patent trafficking)' },
+];
+
+const CASE_2_METHODS = [
+  {
+    id: 'transdermal_dmso',
+    label: 'Transdermal DMSO Scanner Poisoning + HVAC Supercooling',
+    desc: 'Coated thumb scanner with DMSO and batrachotoxin at 10:15 PM; supercooled vault to 6°C to corrupt algor mortis time-of-death.',
+  },
+  {
+    id: 'ventilation_gas',
+    label: 'Airlock Ventilation Infiltration with Toxic Nerve Agent',
+    desc: 'Pumped lethal aerosol through the study\'s ceiling intake duct after midnight.',
+  },
+  {
+    id: 'scotch_poison',
+    label: 'Potassium Cyanide Laced in Evening Scotch Whiskey',
+    desc: 'Poisoned the tumbler of scotch left untouched on Julian\'s desk.',
+  },
+];
+
 export const AccusationBoard = ({
   isOpen,
   onClose,
@@ -42,6 +66,10 @@ export const AccusationBoard = ({
   caseData = null,
   onRestartInvestigation,
 }) => {
+  const isCase2 = caseData?.id === 'phantom-heir';
+  const suspectChoices = isCase2 ? CASE_2_SUSPECTS : CASE_1_SUSPECTS;
+  const methodChoices = isCase2 ? CASE_2_METHODS : CASE_1_METHODS;
+
   const [selectedSuspect, setSelectedSuspect] = useState('');
   const [selectedMethod, setSelectedMethod] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -150,10 +178,10 @@ export const AccusationBoard = ({
                 {/* Section 1: Prime Suspect */}
                 <div>
                   <label className="text-xs font-mono uppercase tracking-wider text-rose-400 font-bold block mb-3">
-                    Step 1: Identify Dr. Aris Thorne's Killer
+                    {isCase2 ? "Step 1: Identify Julian Sterling's Killer" : "Step 1: Identify Dr. Aris Thorne's Killer"}
                   </label>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    {SUSPECT_CHOICES.map((s) => (
+                    {suspectChoices.map((s) => (
                       <div
                         key={s.id}
                         onClick={() => setSelectedSuspect(s.id)}
@@ -178,10 +206,10 @@ export const AccusationBoard = ({
                 {/* Section 2: Method */}
                 <div>
                   <label className="text-xs font-mono uppercase tracking-wider text-rose-400 font-bold block mb-3">
-                    Step 2: Reconstruct the Locked-Room Infiltration Method
+                    Step 2: Reconstruct the Murder Method
                   </label>
                   <div className="flex flex-col gap-3">
-                    {METHOD_CHOICES.map((m) => (
+                    {methodChoices.map((m) => (
                       <div
                         key={m.id}
                         onClick={() => setSelectedMethod(m.id)}

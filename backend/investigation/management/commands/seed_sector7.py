@@ -83,9 +83,9 @@ class Command(BaseCommand):
 
         for c in clues_data:
             Clue.objects.update_or_create(
+                case=case,
                 clue_id=c['clue_id'],
                 defaults={
-                    'case': case,
                     'name': c['name'],
                     'category': c['category'],
                     'summary': c['summary'],

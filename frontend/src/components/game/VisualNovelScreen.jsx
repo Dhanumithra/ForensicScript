@@ -203,6 +203,7 @@ export const VisualNovelScreen = ({ engine }) => {
         onClose={() => setIsDossierOpen(false)}
         allClues={caseData?.clues || []}
         unlockedClueIds={unlockedClues}
+        minRequired={caseData?.min_evidence_required || 3}
       />
 
       <InterrogationSelector
@@ -211,6 +212,7 @@ export const VisualNovelScreen = ({ engine }) => {
         unlockedClueIds={unlockedClues}
         allClues={caseData?.clues || []}
         onPresentEvidence={presentEvidence}
+        caseData={caseData}
       />
 
       <AccusationBoard

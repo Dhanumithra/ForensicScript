@@ -52,8 +52,10 @@ function App() {
           hasActiveSession={!!session}
           activeSessionEnergy={energy}
           activeSessionCluesCount={unlockedClues.length}
+          activeSessionCaseId={session?.case || engine.caseData?.id || 'sector-7'}
           isCase1Solved={isCase1Solved}
-          onStartCase={() => startNewGame()}
+          isCase2Solved={profile?.casesSolved?.includes('phantom-heir')}
+          onStartCase={(caseId) => startNewGame(null, caseId || 'sector-7')}
           onRestartCase={reinvestigateCase}
           onResumeCase={resumeCase}
           onOpenProfile={() => setIsProfileOpen(true)}

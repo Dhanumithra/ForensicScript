@@ -17,7 +17,9 @@ export const VictoryModal = ({ isOpen, victoryData, onReturnHome, onPlayAgain })
 
   if (!isOpen) return null;
 
-  const defeatedSpriteUrl = getCharacterSprite('vance_defeated');
+  const culpritSprite = victoryData?.sprite || 'vance_defeated';
+  const defeatedSpriteUrl = getCharacterSprite(culpritSprite);
+  const culpritName = victoryData?.culprit || 'Marcus Vance';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-xl overflow-y-auto">
@@ -47,18 +49,18 @@ export const VictoryModal = ({ isOpen, victoryData, onReturnHome, onPlayAgain })
 
         {/* Content: Sprite + Breakdown */}
         <div className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-12 gap-6">
-          {/* Defeated Vance Sprite */}
+          {/* Defeated Culprit Sprite */}
           <div className="md:col-span-4 flex flex-col items-center justify-center bg-slate-900/60 p-4 rounded-xl border border-slate-800">
             <div className="relative w-44 h-64 flex items-center justify-center overflow-hidden rounded-lg bg-slate-950/80 mb-3 border border-slate-700/50 shadow-inner">
               {defeatedSpriteUrl && (
                 <img
                   src={defeatedSpriteUrl}
-                  alt="Marcus Vance Defeated"
+                  alt={`${culpritName} Defeated`}
                   className="max-h-full max-w-full object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.9)]"
                 />
               )}
             </div>
-            <span className="font-bold text-sm text-slate-200">Marcus Vance</span>
+            <span className="font-bold text-sm text-slate-200 text-center">{culpritName}</span>
             <span className="text-[11px] font-mono text-rose-400 font-bold">IN HANDCUFFS</span>
           </div>
 

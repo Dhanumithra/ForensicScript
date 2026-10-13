@@ -9,7 +9,7 @@ import {
   HelpCircle,
 } from 'lucide-react';
 
-const SUSPECTS = [
+const CASE_1_SUSPECTS = [
   {
     id: 'elena',
     name: 'Dr. Elena Cruz',
@@ -42,23 +42,63 @@ const SUSPECTS = [
   },
 ];
 
+const CASE_2_SUSPECTS = [
+  {
+    id: 'vivienne',
+    name: 'Vivienne Sterling',
+    role: "Julian's Eldest Daughter & CCO",
+    defaultSprite: 'vivienne_neutral',
+    breakdownSprite: 'vivienne_shocked',
+    alibi: 'I was on camera at the charity gala at 02:00 AM with three city councilors. You have no legal standing to hold me.',
+    requiredClue: 'E1',
+    hint: 'Present Vitreous Potassium Assay (E1) to pierce the false 02:00 AM TOD.',
+  },
+  {
+    id: 'rowan',
+    name: 'Rowan Brooks',
+    role: 'Head of Manor Security',
+    defaultSprite: 'rowan_neutral',
+    breakdownSprite: 'rowan_tense',
+    alibi: 'My perimeter was secure. The environmental and door telemetry was monitored from my desk all night.',
+    requiredClue: 'E2',
+    hint: 'Present HVAC Thermal Inversion Log (E2) regarding the 6°C supercooling override.',
+  },
+  {
+    id: 'cedric',
+    name: 'Dr. Cedric Laurent',
+    role: 'Personal Neurologist & Research Scientist',
+    defaultSprite: 'cedric_neutral',
+    breakdownSprite: 'cedric_defeated',
+    alibi: 'I monitored his live neural telemetry from the clinic annex; Julian died peacefully from cardiovascular failure at 02:00 AM.',
+    requiredClue: 'E4',
+    hint: 'Present Cloned Telemetry (E4), Intercom Audio (E6), or Disinheritance Codicil (E5).',
+  },
+];
+
 export const InterrogationSelector = ({
   isOpen,
   onClose,
   unlockedClueIds = [],
   allClues = [],
   onPresentEvidence,
+  caseData = null,
 }) => {
-  const [selectedSuspect, setSelectedSuspect] = useState(SUSPECTS[0]);
+  const isCase2 = caseData?.id === 'phantom-heir';
+  const suspectsList = isCase2 ? CASE_2_SUSPECTS : CASE_1_SUSPECTS;
+
+  const [selectedSuspectId, setSelectedSuspectId] = useState('');
   const [selectedClueId, setSelectedClueId] = useState('');
   const [result, setResult] = useState(null);
-  const [activeSprite, setActiveSprite] = useState(SUSPECTS[0].defaultSprite);
+  const [spriteOverride, setSpriteOverride] = useState(null);
+
+  const selectedSuspect = suspectsList.find((s) => s.id === selectedSuspectId) || suspectsList[0];
+  const activeSprite = spriteOverride || selectedSuspect.defaultSprite;
 
   if (!isOpen) return null;
 
   const handleSelectSuspect = (suspect) => {
-    setSelectedSuspect(suspect);
-    setActiveSprite(suspect.defaultSprite);
+    setSelectedSuspectId(suspect.id);
+    setSpriteOverride(null);
     setSelectedClueId('');
     setResult(null);
   };
@@ -69,7 +109,7 @@ export const InterrogationSelector = ({
     if (res) {
       setResult(res);
       if (res.success && res.sprite) {
-        setActiveSprite(res.sprite);
+        setSpriteOverride(res.sprite);
       }
     }
   };
@@ -108,7 +148,7 @@ export const InterrogationSelector = ({
 
           {/* Suspect Tabs */}
           <div className="flex border-b border-slate-800 bg-slate-950/40 px-6 pt-3 gap-2 overflow-x-auto">
-            {SUSPECTS.map((s) => (
+            {suspectsList.map((s) => (
               <button
                 key={s.id}
                 onClick={() => handleSelectSuspect(s)}

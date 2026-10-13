@@ -28,6 +28,7 @@ export const EvidenceModal = ({
   onClose,
   allClues = [],
   unlockedClueIds = [],
+  minRequired = 3,
 }) => {
   const [selectedClue, setSelectedClue] = useState(null);
 
@@ -68,7 +69,9 @@ export const EvidenceModal = ({
                 </h2>
                 <p className="text-xs text-slate-400 font-mono">
                   {unlockedClueIds.length} / 6 Clues Collected & Verified (
-                  {unlockedClueIds.length >= 3 ? 'Indictment Gate Unlocked (50%)' : 'Minimum 3 Required (50%)'}
+                  {unlockedClueIds.length >= minRequired
+                    ? `Indictment Gate Unlocked (${minRequired}/6 Required)`
+                    : `Minimum ${minRequired} Required to Indict`}
                   )
                 </p>
               </div>

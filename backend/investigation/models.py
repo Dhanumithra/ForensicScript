@@ -15,7 +15,8 @@ class Case(models.Model):
 
 
 class Clue(models.Model):
-    clue_id = models.CharField(max_length=20, primary_key=True)
+    id = models.BigAutoField(primary_key=True)
+    clue_id = models.CharField(max_length=20)
     case = models.ForeignKey(Case, on_delete=models.CASCADE, related_name='clues')
     name = models.CharField(max_length=200)
     category = models.CharField(max_length=100)
@@ -24,8 +25,11 @@ class Clue(models.Model):
     contradiction = models.TextField(blank=True, default='')
     icon = models.CharField(max_length=50, default='file')
 
+    class Meta:
+        unique_together = ('case', 'clue_id')
+
     def __str__(self):
-        return f"{self.clue_id}: {self.name}"
+        return f"[{self.case_id}] {self.clue_id}: {self.name}"
 
 
 class DialogueNode(models.Model):

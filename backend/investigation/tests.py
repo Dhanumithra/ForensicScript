@@ -270,3 +270,74 @@ class ForensicEngineAPITests(TestCase):
         session.refresh_from_db()
         self.assertEqual(session.energy, 50)
         self.assertEqual(session.status, 'active')
+
+    def test_case2_phantom_heir_full_flow(self):
+        """Case 2: Start session, unlock clues, interrogate suspects, and convict Cedric Laurent"""
+        call_command('seed_phantom_heir')
+        case2 = Case.objects.get(id='phantom-heir')
+
+        # 1. Start Case 2 session
+        start_res = self.client.post('/api/sessions/start/', {
+            'case_id': 'phantom-heir',
+            'detective_gender': 'f'
+        }, format='json')
+        self.assertEqual(start_res.status_code, status.HTTP_201_CREATED)
+        session_id = start_res.data['session']['session_id']
+
+        # 2. Interrogation of Vivienne with E1
+        viv_res = self.client.post('/api/sessions/interrogate/', {
+            'session_id': session_id,
+            'suspect': 'Vivienne Sterling',
+            'clue_id': 'E1'
+        }, format='json')
+        self.assertEqual(viv_res.status_code, status.HTTP_200_OK)
+        self.assertTrue(viv_res.data['success'])
+        self.assertEqual(viv_res.data['sprite'], 'vivienne_shocked')
+
+        # 3. Interrogation of Rowan with E2
+        rowan_res = self.client.post('/api/sessions/interrogate/', {
+            'session_id': session_id,
+            'suspect': 'Rowan Brooks',
+            'clue_id': 'E2'
+        }, format='json')
+        self.assertEqual(rowan_res.status_code, status.HTTP_200_OK)
+        self.assertTrue(rowan_res.data['success'])
+        self.assertEqual(rowan_res.data['sprite'], 'rowan_tense')
+
+        # 4. Interrogation of Cedric with E5
+        cedric_res = self.client.post('/api/sessions/interrogate/', {
+            'session_id': session_id,
+            'suspect': 'Dr. Cedric Laurent',
+            'clue_id': 'E5'
+        }, format='json')
+        self.assertEqual(cedric_res.status_code, status.HTTP_200_OK)
+        self.assertTrue(cedric_res.data['success'])
+        self.assertEqual(cedric_res.data['sprite'], 'cedric_defeated')
+
+        # 5. Evidence gate: < 4 clues fails indictment
+        session = GameSession.objects.get(session_id=session_id)
+        session.unlocked_clues = ['E1', 'E2', 'E3']
+        session.save()
+
+        fail_accuse = self.client.post('/api/sessions/accuse/', {
+            'session_id': session_id,
+            'culprit': 'Dr. Cedric Laurent',
+            'method': 'Transdermal DMSO on biometric scanner'
+        }, format='json')
+        self.assertEqual(fail_accuse.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(fail_accuse.data['error'], 'INSUFFICIENT_EVIDENCE')
+
+        # 6. Valid Indictment: >= 4 clues succeeds
+        session.unlocked_clues = ['E1', 'E2', 'E3', 'E4', 'E5']
+        session.save()
+
+        success_accuse = self.client.post('/api/sessions/accuse/', {
+            'session_id': session_id,
+            'culprit': 'Dr. Cedric Laurent',
+            'method': 'Transdermal DMSO on biometric scanner + HVAC temperature manipulation'
+        }, format='json')
+        self.assertEqual(success_accuse.status_code, status.HTTP_200_OK)
+        self.assertTrue(success_accuse.data['success'])
+        self.assertIn('Cedric Laurent', success_accuse.data['culprit'])
+        self.assertEqual(success_accuse.data['sprite'], 'cedric_defeated')
+

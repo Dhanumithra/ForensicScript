@@ -26,10 +26,12 @@ import {
 
 export const HomePage = ({
   profile,
-  hasActiveSession,
-  activeSessionEnergy,
-  activeSessionCluesCount,
-  isCase1Solved,
+  hasActiveSession = false,
+  activeSessionEnergy = 50,
+  activeSessionCluesCount = 0,
+  activeSessionCaseId = 'sector-7',
+  isCase1Solved = false,
+  isCase2Solved = false,
   onStartCase,
   onRestartCase,
   onResumeCase,
@@ -215,6 +217,7 @@ export const HomePage = ({
         {/* Cases Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* CASE 1: The Vanishing at Sector 7 (Active / Available) */}
+          {/* CASE 1: Sector 7 */}
           <div className="glass-panel rounded-2xl p-6 border border-cyan-500/40 shadow-xl flex flex-col justify-between hover:border-cyan-400/80 transition-all duration-300 relative overflow-hidden group">
             {/* Neon Warning Tape Corner Strip */}
             <div className="absolute -top-1 -left-3 px-5 py-1 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 text-slate-950 font-mono font-black text-[10px] tracking-widest uppercase rotate-[-7deg] shadow-[0_0_15px_rgba(250,204,21,0.65)] border-y border-amber-100 z-10 flex items-center gap-1.5">
@@ -228,7 +231,7 @@ export const HomePage = ({
                 <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500 text-emerald-300 font-mono text-xs font-bold shadow-[0_0_10px_rgba(16,185,129,0.3)]">
                   <CheckCircle2 className="w-3.5 h-3.5" /> SOLVED
                 </span>
-              ) : hasActiveSession ? (
+              ) : (hasActiveSession && activeSessionCaseId === 'sector-7') ? (
                 <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-400 text-cyan-300 font-mono text-xs font-bold animate-pulse">
                   <Zap className="w-3.5 h-3.5 fill-cyan-300" /> IN PROGRESS ({activeSessionEnergy} / 50 AP)
                 </span>
@@ -278,7 +281,7 @@ export const HomePage = ({
                 </div>
               )}
               <div className="flex items-center gap-3">
-                {hasActiveSession && !isCase1Solved ? (
+                {hasActiveSession && activeSessionCaseId === 'sector-7' && !isCase1Solved ? (
                   <>
                     <button
                       onClick={onResumeCase}
@@ -308,11 +311,11 @@ export const HomePage = ({
             </div>
           </div>
 
-          {/* CASE 2: The Silicon Protocol (Unlocked only after solving Case 1!) */}
+          {/* CASE 2: The Phantom Heir (Unlocked after solving Case 1!) */}
           <div
             className={`glass-panel rounded-2xl p-6 border shadow-xl flex flex-col justify-between transition-all duration-300 relative overflow-hidden ${
               isCase2Unlocked
-                ? 'border-amber-500/50 hover:border-amber-400'
+                ? 'border-cyan-500/50 hover:border-cyan-400 shadow-[0_0_25px_rgba(34,211,238,0.15)]'
                 : 'border-slate-800'
             }`}
           >
@@ -329,14 +332,22 @@ export const HomePage = ({
             {isCase2Unlocked && (
               <div className="absolute -top-1 -left-3 px-5 py-1 bg-gradient-to-r from-cyan-400 via-teal-300 to-cyan-400 text-slate-950 font-mono font-black text-[10px] tracking-widest uppercase rotate-[-7deg] shadow-[0_0_15px_rgba(34,211,238,0.65)] border-y border-cyan-100 z-10 flex items-center gap-1.5">
                 <AlertTriangle className="w-3 h-3 fill-slate-950" />
-                CLEARED DOSSIER
+                ACTIVE CRIME SCENE
               </div>
             )}
 
             {/* Status Badge */}
             <div className="absolute top-4 right-4 z-10">
-              {isCase2Unlocked ? (
-                <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-950/80 border border-amber-500 text-amber-300 font-mono text-xs font-bold">
+              {isCase2Solved ? (
+                <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500 text-emerald-300 font-mono text-xs font-bold shadow-[0_0_10px_rgba(16,185,129,0.3)]">
+                  <CheckCircle2 className="w-3.5 h-3.5" /> SOLVED
+                </span>
+              ) : isCase2Unlocked && hasActiveSession && activeSessionCaseId === 'phantom-heir' ? (
+                <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-400 text-cyan-300 font-mono text-xs font-bold animate-pulse">
+                  <Zap className="w-3.5 h-3.5 fill-cyan-300" /> IN PROGRESS ({activeSessionEnergy} / 50 AP)
+                </span>
+              ) : isCase2Unlocked ? (
+                <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-500 text-cyan-300 font-mono text-xs font-bold">
                   <Unlock className="w-3.5 h-3.5" /> UNLOCKED: CASE OPEN
                 </span>
               ) : (
@@ -348,38 +359,61 @@ export const HomePage = ({
 
             <div className={!isCase2Unlocked ? 'opacity-40 pt-4' : 'pt-4'}>
               <div className="flex items-start justify-between gap-3 mb-1">
-                <span className="text-xs font-mono uppercase tracking-widest text-amber-400 font-bold block">
-                  CASE NO. 08-SP
+                <span className="text-xs font-mono uppercase tracking-widest text-cyan-400 font-bold block">
+                  CASE NO. 08-NX
                 </span>
-                <EvidenceMarker number="02" label="DIGITAL" />
+                <EvidenceMarker number="02" label="BIO-VAULT" />
               </div>
 
               <h2 className="text-xl font-bold text-white font-sans mb-2">
-                The Silicon Protocol: Breach at Sub-Level 3
+                The Phantom Heir
               </h2>
               <p className="text-xs text-slate-300 leading-relaxed mb-4">
-                A high-frequency cyber breach compromised Aether Biometrix's automated wafer production grid.
-                The security architect was found asphyxiated beside the fiber router racks.
+                Julian Sterling is found dead inside the soundproof, Faraday-shielded Obsidian Study vault.
+                The vault sealed at 10:42 PM, but liver temperature placed death at 02:00 AM. Break the impossible locked room, pierce the false time of death, and identify the Phantom Heir before noon.
               </p>
 
               <div className="flex flex-wrap gap-2 text-[11px] font-mono text-slate-400 mb-6">
                 <span className="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">
-                  Location: Server Catacombs
+                  Location: Obsidian Study, Sterling Manor
                 </span>
                 <span className="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">
-                  Digital & Cyber Forensics
+                  6 Forensic Clues
                 </span>
                 <span className="px-2 py-0.5 rounded bg-slate-900 border border-slate-800">
-                  {isCase2Unlocked ? 'Inspector Clearance Verified' : 'Requires Case 1 Resolution'}
+                  60% Evidence Gate
                 </span>
               </div>
             </div>
 
             <div className="pt-4 border-t border-slate-800/80 relative z-10">
               {isCase2Unlocked ? (
-                <div className="p-3 rounded-xl bg-amber-950/40 border border-amber-500/30 text-center text-xs font-mono text-amber-300">
-                  ★ Case Unlocked: Official FBI Liaison Briefing Scheduled for Next Expansion!
-                </div>
+                hasActiveSession && activeSessionCaseId === 'phantom-heir' && !isCase2Solved ? (
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={onResumeCase}
+                      className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-slate-950 font-mono text-xs font-bold uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(56,189,248,0.3)] flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <Play className="w-4 h-4 fill-slate-950" />
+                      <span>Resume Investigation ({activeSessionCluesCount}/6 Clues)</span>
+                    </button>
+                    <button
+                      onClick={() => (onRestartCase ? onRestartCase() : onStartCase('phantom-heir'))}
+                      className="p-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-700 transition-colors cursor-pointer"
+                      title="Re-investigate from Start (Maintains AP)"
+                    >
+                      <RotateCcw className="w-4 h-4" />
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => onStartCase('phantom-heir')}
+                    className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-slate-950 font-mono text-xs font-bold uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(56,189,248,0.3)] flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <Play className="w-4 h-4 fill-slate-950" />
+                    <span>{isCase2Solved ? 'Replay The Phantom Heir' : `Investigate The Phantom Heir (${activeSessionEnergy}/50 AP)`}</span>
+                  </button>
+                )
               ) : (
                 <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-center text-xs font-mono text-slate-400">
                   Solve Case 1 ("The Vanishing at Sector 7") to earn promotion and unlock this docket.

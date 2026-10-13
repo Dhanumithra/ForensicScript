@@ -210,7 +210,7 @@ class InterrogateView(APIView):
         suspect = data['suspect'].lower().strip()
         clue_id = data['clue_id'].upper().strip()
 
-        # Elena Cruz confrontation
+        # Elena Cruz confrontation (Case 1)
         if 'elena' in suspect:
             if clue_id == 'E3':
                 return Response({
@@ -232,7 +232,7 @@ class InterrogateView(APIView):
                     'audio_cue': 'penalty'
                 })
 
-        # Kevin Lin confrontation
+        # Kevin Lin confrontation (Case 1)
         elif 'kevin' in suspect:
             if clue_id == 'E4':
                 return Response({
@@ -254,7 +254,7 @@ class InterrogateView(APIView):
                     'audio_cue': 'penalty'
                 })
 
-        # Marcus Vance confrontation
+        # Marcus Vance confrontation (Case 1)
         elif 'vance' in suspect:
             if clue_id == 'E5':
                 return Response({
@@ -276,6 +276,102 @@ class InterrogateView(APIView):
                     'audio_cue': 'penalty'
                 })
 
+        # Vivienne Sterling confrontation (Case 2)
+        elif 'vivienne' in suspect:
+            if clue_id == 'E1':
+                return Response({
+                    'success': True,
+                    'suspect': 'Vivienne Sterling',
+                    'sprite': 'vivienne_shocked',
+                    'headline': 'Alibi Demolished: Vitreous Potassium Contradiction',
+                    'dialogue': 'No... no, wait! I didn\'t touch him! I drove here to get the bearer bonds from his safe before he signed them away to his foundation! But when I arrived at 10:38 PM, the study was already locked. I knocked, shouted his name... he never answered. He was already dead inside!',
+                    'testimony': 'Vivienne confirms arriving at 10:38 PM to steal bearer bonds; found the study locked and silent. Julian was already dead inside.',
+                    'audio_cue': 'contradiction'
+                })
+            else:
+                return Response({
+                    'success': False,
+                    'suspect': 'Vivienne Sterling',
+                    'sprite': 'vivienne_defensive',
+                    'headline': 'Objection Rejected',
+                    'dialogue': 'I was on camera at the charity gala at 02:00 AM with three city councilors. You have no legal standing to hold me, Detective.',
+                    'audio_cue': 'penalty'
+                })
+
+        # Rowan Brooks confrontation (Case 2)
+        elif 'rowan' in suspect or 'brooks' in suspect:
+            if clue_id == 'E2':
+                return Response({
+                    'success': True,
+                    'suspect': 'Rowan Brooks',
+                    'sprite': 'rowan_tense',
+                    'headline': 'Security Log Compromise: HVAC Supercooling Exposed',
+                    'dialogue': 'Because I silenced the alert feed for the north wing! Vivienne transferred $250,000 to my Cayman account to mute the exterior gate cameras for forty-five minutes so she could grab her inheritance papers. I thought it was family squabbling! I didn\'t know someone was using that blind spot to freeze a corpse!',
+                    'testimony': 'Rowan confesses to accepting a $250k bribe from Vivienne to blind the north wing cameras and silence HVAC environmental alerts.',
+                    'audio_cue': 'contradiction'
+                })
+            else:
+                return Response({
+                    'success': False,
+                    'suspect': 'Rowan Brooks',
+                    'sprite': 'rowan_neutral',
+                    'headline': 'Objection Rejected',
+                    'dialogue': 'My perimeter was secure. The environmental and door telemetry was monitored from my desk all night.',
+                    'audio_cue': 'penalty'
+                })
+
+        # Dr. Cedric Laurent confrontation (Case 2)
+        elif 'cedric' in suspect or 'laurent' in suspect:
+            if clue_id == 'E4':
+                return Response({
+                    'success': True,
+                    'suspect': 'Dr. Cedric Laurent',
+                    'sprite': 'cedric_neutral',
+                    'headline': 'Neural Loop Unmasked: Replayed EEG Glitch',
+                    'dialogue': 'A telemetry transmission buffer error, Detective. In experimental bio-interfaces, packet repeating is common. It doesn\'t prove malicious intent.',
+                    'testimony': 'Cedric is rattled that his 11:00 PM - 02:00 AM EEG vitals loop was detected.',
+                    'audio_cue': 'contradiction'
+                })
+            elif clue_id == 'E6':
+                return Response({
+                    'success': True,
+                    'suspect': 'Dr. Cedric Laurent',
+                    'sprite': 'cedric_cold',
+                    'headline': 'Intercom Voice Deepfake: 19.2 kHz Artifact',
+                    'dialogue': '...Go on, Detective. Let\'s see what else you think you\'ve pieced together.',
+                    'testimony': 'Spectral filtering matches the 01:30 AM intercom call to Cedric\'s VocalSynth-Pro voice synthesis workstation.',
+                    'audio_cue': 'contradiction'
+                })
+            elif clue_id == 'E3':
+                return Response({
+                    'success': True,
+                    'suspect': 'Dr. Cedric Laurent',
+                    'sprite': 'cedric_cold',
+                    'headline': 'Murder Weapon Identified: Transdermal DMSO Neurotoxin',
+                    'dialogue': 'DMSO and batrachotoxin... a lethal cocktail that penetrates skin without leaving a puncture wound. But you still haven\'t proven motive, Detective.',
+                    'testimony': 'Cedric acknowledges the neurotoxic mechanism used on the biometric thumb scanner.',
+                    'audio_cue': 'contradiction'
+                })
+            elif clue_id == 'E5':
+                return Response({
+                    'success': True,
+                    'suspect': 'Dr. Cedric Laurent',
+                    'sprite': 'cedric_defeated',
+                    'headline': 'The Phantom Heir Unmasked: Full Confession',
+                    'dialogue': 'He was going to give forty years of groundbreaking neural patents to an offshore charity trust! A man who never acknowledged my mother, never gave me his name, and treated me like a hired technician. I built his empire\'s neural algorithms with my own mind! Everything in that estate belonged to me!',
+                    'testimony': 'Cedric breaks completely, confessing to Julian\'s premeditated murder after being disinherited.',
+                    'audio_cue': 'contradiction'
+                })
+            else:
+                return Response({
+                    'success': False,
+                    'suspect': 'Dr. Cedric Laurent',
+                    'sprite': 'cedric_neutral',
+                    'headline': 'Objection Rejected',
+                    'dialogue': 'I monitored Julian\'s telemetry from the clinic, Detective. Everything was stable until 02:00 AM.',
+                    'audio_cue': 'penalty'
+                })
+
         return Response({
             'success': False,
             'headline': 'Unknown Suspect',
@@ -291,13 +387,13 @@ class AccuseView(APIView):
 
         session = get_object_or_404(GameSession, session_id=data['session_id'])
 
-        # 50% Clue Rule Check (At least min_evidence_required clues required, 3/6)
+        # Evidence Gate Check (min_evidence_required confirmed clues)
         clue_count = len(session.unlocked_clues)
         if clue_count < session.case.min_evidence_required:
             return Response({
                 'success': False,
                 'error': 'INSUFFICIENT_EVIDENCE',
-                'message': f'Insufficient Evidence! The prosecutor rejects your indictment. You hold {clue_count}/6 clues. At least {session.case.min_evidence_required} confirmed clues (50%) are required to secure an arrest warrant. Head back to the lab and check the logs.',
+                'message': f'Insufficient Evidence! The prosecutor rejects your indictment. You hold {clue_count}/{session.case.total_evidence} clues. At least {session.case.min_evidence_required} confirmed clues are required to secure an arrest warrant. Head back to the lab and check the logs.',
                 'clues_held': clue_count,
                 'min_required': session.case.min_evidence_required
             }, status=status.HTTP_400_BAD_REQUEST)
@@ -305,55 +401,110 @@ class AccuseView(APIView):
         culprit = data['culprit'].strip().lower()
         method = data['method'].strip().lower()
 
-        is_culprit_correct = 'vance' in culprit
-        is_method_correct = 'conveyor' in method or 'heat' in method or 'purge' in method
+        is_case_2 = session.case_id == 'phantom-heir' or 'cedric' in culprit or 'laurent' in culprit
 
-        if is_culprit_correct and is_method_correct:
-            session.status = 'solved'
-            session.is_completed = True
-            grade = 'Master Forensic Detective' if session.energy >= 40 else 'Senior Homicide Inspector'
-            session.grade = grade
-            session.save()
+        if is_case_2:
+            is_culprit_correct = 'cedric' in culprit or 'laurent' in culprit
+            is_method_correct = any(k in method for k in ['dmso', 'scanner', 'hvac', 'temperature', 'toxin', 'batrachotoxin'])
 
-            return Response({
-                'success': True,
-                'verdict': 'GUILTY - FIRST-DEGREE MURDER',
-                'culprit': 'Marcus Vance (CEO, Aether Biometrix)',
-                'grade': grade,
-                'final_energy': session.energy,
-                'sprite': 'vance_defeated',
-                'confession': 'He was going to burn this company to the ground over a rounding error! Over numbers on a spreadsheet! I built this empire... I was not going to let an academic ruin it!',
-                'case_summary': [
-                    'At 02:15 AM: Vance confronted Dr. Thorne in the outer corridor. When Thorne refused the buyout, Vance asphyxiated him (E1: Flat spinal lividity).',
-                    'At 02:50 AM: Dr. Elena Cruz discovered the body, panicked, and stole the encrypted USB drive, picking up fresh coolant (E3: Blue chemical residue).',
-                    'At 03:14 AM: Vance exploited Kevin Lin\'s paid 90-second camera blackout (E4: Smartwatch handshake).',
-                    'Vance pushed Thorne\'s body onto the motorized wafer intake conveyor (E2: Torn synthetic cloth).',
-                    'He staged Thorne in the chair and activated Sector 7\'s 65°C emergency sterilizer from the hall console to vaporize all touch DNA (E6: Telemetry log).',
-                    'Motive verified: Thorne\'s 01:15 AM whistleblower email threatened federal disclosure of falsified sensor yields (E5).'
-                ],
-                'audio_cue': 'victory'
-            })
+            if is_culprit_correct and is_method_correct:
+                session.status = 'solved'
+                session.is_completed = True
+                grade = 'Master Forensic Detective' if session.energy >= 40 else 'Senior Homicide Inspector'
+                session.grade = grade
+                session.save()
+
+                return Response({
+                    'success': True,
+                    'verdict': 'GUILTY - FIRST-DEGREE PREMEDITATED MURDER',
+                    'culprit': 'Dr. Cedric Laurent (Personal Neurologist & Illegitimate Son)',
+                    'grade': grade,
+                    'final_energy': session.energy,
+                    'sprite': 'cedric_defeated',
+                    'confession': 'He was going to give forty years of groundbreaking neural patents to an offshore charity trust! A man who never acknowledged my mother, never gave me his name, and treated me like a hired technician. I built his empire\'s neural algorithms with my own mind! Everything in that estate belonged to me!',
+                    'case_summary': [
+                        'At 09:00 PM: Julian discovered Cedric was secretly trafficking neural implant patents on the black market and executed a holographic codicil disinheriting him (E5: Disinheritance Codicil).',
+                        'At 10:15 PM: Cedric coated the Obsidian Study\'s outer biometric thumb-reader with transdermal DMSO and batrachotoxin (E3: Chemical swab).',
+                        'At 10:40 PM: Julian pressed his thumb to the scanner to seal the vault for the night, immediately absorbing a lethal neurotoxic dose.',
+                        'At 10:45 PM: Cedric overrode the study HVAC to supercool the room to 6°C, artificially accelerating body cooling to corrupt algor mortis calculations (E2: HVAC log).',
+                        'At 11:00 PM to 02:00 AM: Cedric looped Julian\'s EEG telemetry on the medical clinic server to simulate active brainwaves (E4: Cloned neural glitch).',
+                        'At 01:30 AM: Cedric broadcast a neural AI voice clone of Julian over the security intercom to deceive the night guard (E6: Synthesized intercom artifact).',
+                        'Fatal Flaw: Julian\'s ocular vitreous potassium levels ([K+] = 14.8 mmol/L) proved death occurred before 10:50 PM, completely shattering Cedric\'s alibi (E1).'
+                    ],
+                    'audio_cue': 'victory'
+                })
+            else:
+                # Penalize reckless accusation (-20 AP)
+                session.energy = max(0, session.energy - 20)
+                if session.energy <= 0:
+                    session.status = 'game_over'
+                session.save()
+
+                feedback = []
+                if not is_culprit_correct:
+                    feedback.append('Incorrect culprit named. Review the medical motive and disinheritance codicil.')
+                if not is_method_correct:
+                    feedback.append('Incorrect murder method. Remember the transdermal poison on the scanner and environmental HVAC tampering.')
+
+                return Response({
+                    'success': False,
+                    'error': 'WRONG_INDICTMENT',
+                    'message': 'Indictment Rejected! ' + ' '.join(feedback),
+                    'current_energy': session.energy,
+                    'status': session.status,
+                    'audio_cue': 'penalty'
+                }, status=status.HTTP_400_BAD_REQUEST)
         else:
-            # Penalize reckless accusation (-20 AP)
-            session.energy = max(0, session.energy - 20)
-            if session.energy <= 0:
-                session.status = 'game_over'
-            session.save()
+            # Case 1 (Sector 7)
+            is_culprit_correct = 'vance' in culprit
+            is_method_correct = 'conveyor' in method or 'heat' in method or 'purge' in method
 
-            feedback = []
-            if not is_culprit_correct:
-                feedback.append('Incorrect culprit named. Review the motive and physical testimonies.')
-            if not is_method_correct:
-                feedback.append('Incorrect murder method. Remember the airtight magnetic door seals were never broken.')
+            if is_culprit_correct and is_method_correct:
+                session.status = 'solved'
+                session.is_completed = True
+                grade = 'Master Forensic Detective' if session.energy >= 40 else 'Senior Homicide Inspector'
+                session.grade = grade
+                session.save()
 
-            return Response({
-                'success': False,
-                'error': 'WRONG_INDICTMENT',
-                'message': 'Indictment Rejected! ' + ' '.join(feedback),
-                'current_energy': session.energy,
-                'status': session.status,
-                'audio_cue': 'penalty'
-            }, status=status.HTTP_400_BAD_REQUEST)
+                return Response({
+                    'success': True,
+                    'verdict': 'GUILTY - FIRST-DEGREE MURDER',
+                    'culprit': 'Marcus Vance (CEO, Aether Biometrix)',
+                    'grade': grade,
+                    'final_energy': session.energy,
+                    'sprite': 'vance_defeated',
+                    'confession': 'He was going to burn this company to the ground over a rounding error! Over numbers on a spreadsheet! I built this empire... I was not going to let an academic ruin it!',
+                    'case_summary': [
+                        'At 02:15 AM: Vance confronted Dr. Thorne in the outer corridor. When Thorne refused the buyout, Vance asphyxiated him (E1: Flat spinal lividity).',
+                        'At 02:50 AM: Dr. Elena Cruz discovered the body, panicked, and stole the encrypted USB drive, picking up fresh coolant (E3: Blue chemical residue).',
+                        'At 03:14 AM: Vance exploited Kevin Lin\'s paid 90-second camera blackout (E4: Smartwatch handshake).',
+                        'Vance pushed Thorne\'s body onto the motorized wafer intake conveyor (E2: Torn synthetic cloth).',
+                        'He staged Thorne in the chair and activated Sector 7\'s 65°C emergency sterilizer from the hall console to vaporize all touch DNA (E6: Telemetry log).',
+                        'Motive verified: Thorne\'s 01:15 AM whistleblower email threatened federal disclosure of falsified sensor yields (E5).'
+                    ],
+                    'audio_cue': 'victory'
+                })
+            else:
+                # Penalize reckless accusation (-20 AP)
+                session.energy = max(0, session.energy - 20)
+                if session.energy <= 0:
+                    session.status = 'game_over'
+                session.save()
+
+                feedback = []
+                if not is_culprit_correct:
+                    feedback.append('Incorrect culprit named. Review the motive and physical testimonies.')
+                if not is_method_correct:
+                    feedback.append('Incorrect murder method. Remember the airtight magnetic door seals were never broken.')
+
+                return Response({
+                    'success': False,
+                    'error': 'WRONG_INDICTMENT',
+                    'message': 'Indictment Rejected! ' + ' '.join(feedback),
+                    'current_energy': session.energy,
+                    'status': session.status,
+                    'audio_cue': 'penalty'
+                }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ReinvestigateView(APIView):
