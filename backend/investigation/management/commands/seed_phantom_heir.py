@@ -20,7 +20,7 @@ class Command(BaseCommand):
                     'the Phantom Heir before the estate trust transfers at noon.'
                 ),
                 'location': 'The Obsidian Study & Biometric Sanctuary, Sterling Ridge Manor',
-                'min_evidence_required': 4,
+                'min_evidence_required': 3,
                 'total_evidence': 6,
                 'initial_node_id': 'c2_scene_1_intro'
             }
@@ -233,6 +233,13 @@ class Command(BaseCommand):
                         'clue_unlock': 'E3'
                     },
                     {
+                        'id': 'c2_c1_v_to_s2',
+                        'text': "Evidence documented. Proceed to Scene 2: Question Vivienne Sterling.",
+                        'next_node_id': 'c2_scene_2_vivienne_intro',
+                        'energy_delta': 0,
+                        'clue_unlock': None
+                    },
+                    {
                         'id': 'c2_c1_v_to_hub',
                         'text': "Return to the study center.",
                         'next_node_id': 'c2_scene_1_vault_entry',
@@ -267,6 +274,13 @@ class Command(BaseCommand):
                         'clue_unlock': 'E3'
                     },
                     {
+                        'id': 'c2_c1_h_to_s2',
+                        'text': "Evidence documented. Proceed to Scene 2: Question Vivienne Sterling.",
+                        'next_node_id': 'c2_scene_2_vivienne_intro',
+                        'energy_delta': 0,
+                        'clue_unlock': None
+                    },
+                    {
                         'id': 'c2_c1_h_to_hub',
                         'text': "Return to the study center.",
                         'next_node_id': 'c2_scene_1_vault_entry',
@@ -299,6 +313,13 @@ class Command(BaseCommand):
                         'next_node_id': 'c2_scene_1_hvac',
                         'energy_delta': 10,
                         'clue_unlock': 'E2'
+                    },
+                    {
+                        'id': 'c2_c1_s_to_s2',
+                        'text': "Evidence documented. Proceed to Scene 2: Question Vivienne Sterling.",
+                        'next_node_id': 'c2_scene_2_vivienne_intro',
+                        'energy_delta': 0,
+                        'clue_unlock': None
                     },
                     {
                         'id': 'c2_c1_s_to_hub',
@@ -650,7 +671,7 @@ class Command(BaseCommand):
                 'scene_number': 4,
                 'background': 'bg_neural_lab',
                 'speaker': 'DETECTIVE',
-                'sprite': None,
+                'sprite': 'cedric_neutral',
                 'text': "Found the glitch! The EEG telemetry transmitted between 11:00 PM and 02:00 AM has an identical mathematical Fourier transform to an archive baseline recorded three days ago! The 'live vitals' were an automated playback loop running on a scheduled cron-job! (Clue E4 Acquired)",
                 'audio_cue': 'clue',
                 'clue_unlock': 'E4',
@@ -658,8 +679,15 @@ class Command(BaseCommand):
                 'choices_json': [
                     {
                         'id': 'c2_c4_to_interrogate',
-                        'text': "All 6 forensic clues verified. Summon all three suspects to the Interrogation Wing!",
+                        'text': "👥 Gather Suspects: Summon all three to the Interrogation Wing [I]",
                         'next_node_id': 'c2_scene_5_interrogation_intro',
+                        'energy_delta': 0,
+                        'clue_unlock': None
+                    },
+                    {
+                        'id': 'open_accusation_choice',
+                        'text': "⚖️ Break The Case: Proceed directly to Confront Dr. Cedric Laurent [A]",
+                        'next_node_id': 'c2_scene_5_accusation',
                         'energy_delta': 0,
                         'clue_unlock': None
                     }
@@ -673,22 +701,29 @@ class Command(BaseCommand):
                 'background': 'bg_interrogation_room',
                 'speaker': 'OFFICER MILLER',
                 'sprite': 'officer_miller_neutral',
-                'text': "All three suspects have been isolated in the interview wing: Vivienne Sterling, Rowan Brooks, and Dr. Cedric Laurent. Use your collected forensic evidence to shatter their alibis.",
+                'text': "All three suspects have been isolated in the interview wing: Vivienne Sterling, Rowan Brooks, and Dr. Cedric Laurent. Use your collected forensic evidence to shatter their alibis, or confront the killer directly.",
                 'audio_cue': None,
                 'clue_unlock': None,
                 'energy_delta': 0,
                 'choices_json': [
                     {
                         'id': 'c2_open_interrogation',
-                        'text': "Open Interrogation Chamber: Expose Suspect Contradictions [I]",
+                        'text': "👥 Open Interrogation Chamber: Expose Suspect Contradictions [I]",
                         'next_node_id': 'c2_scene_5_interrogation_active',
                         'energy_delta': 0,
                         'clue_unlock': None
                     },
                     {
-                        'id': 'c2_open_accusation_choice',
-                        'text': "I have gathered all the evidence. Proceed to the Final Indictment [A]",
+                        'id': 'open_accusation_choice',
+                        'text': "⚖️ I have gathered sufficient evidence. Confront Dr. Cedric Laurent [A]",
                         'next_node_id': 'c2_scene_5_accusation',
+                        'energy_delta': 0,
+                        'clue_unlock': None
+                    },
+                    {
+                        'id': 'restart_investigation_choice',
+                        'text': "🔄 Not Enough Evidence: Return to Start of Investigation to Find Clues",
+                        'next_node_id': 'c2_scene_1_intro',
                         'energy_delta': 0,
                         'clue_unlock': None
                     }
@@ -699,15 +734,22 @@ class Command(BaseCommand):
                 'scene_number': 5,
                 'background': 'bg_interrogation_room',
                 'speaker': 'DETECTIVE',
-                'sprite': None,
-                'text': "Select a suspect from the dossier to present evidence. Breaking Vivienne's gala alibi (E1) or Rowan's security log (E2) will expose their secret agendas and narrow down the killer.",
+                'sprite': 'officer_miller_serious',
+                'text': "Select a suspect from holding to present evidence. Breaking Vivienne's gala alibi (E1), Rowan's intercom recording (E6), or Cedric's telemetry loop (E4) will shatter their claims and lock the case.",
                 'audio_cue': None,
                 'clue_unlock': None,
                 'energy_delta': 0,
                 'choices_json': [
                     {
-                        'id': 'c2_open_accusation_choice',
-                        'text': "Proceed to Final Indictment & Warrant Execution Board [A]",
+                        'id': 'c2_open_interrogation',
+                        'text': "👥 Question Suspects in Holding [I]",
+                        'next_node_id': 'c2_scene_5_interrogation_active',
+                        'energy_delta': 0,
+                        'clue_unlock': None
+                    },
+                    {
+                        'id': 'open_accusation_choice',
+                        'text': "⚖️ Present Indictment: Confront Dr. Cedric Laurent [A]",
                         'next_node_id': 'c2_scene_5_accusation',
                         'energy_delta': 0,
                         'clue_unlock': None
@@ -724,25 +766,32 @@ class Command(BaseCommand):
             {
                 'node_id': 'c2_scene_5_accusation',
                 'scene_number': 5,
-                'background': 'bg_obsidian_study',
+                'background': 'bg_interrogation_room',
                 'speaker': 'DETECTIVE',
-                'sprite': None,
-                'text': "The forensic timeline is complete. At least 4 confirmed clues (60% gate) are required to secure an airtight murder indictment from the prosecutor. Name the culprit and the exact murder method.",
+                'sprite': 'cedric_neutral',
+                'text': "This is it. Dr. Cedric Laurent sits across the interview table with a calm, charming smile. He believes his false 02:00 AM time-of-death, the Faraday vault lock, and his looped vitals make him untouchable. It is time to break down his illusion step by step.",
                 'audio_cue': None,
                 'clue_unlock': None,
                 'energy_delta': 0,
                 'choices_json': [
                     {
                         'id': 'open_accusation_choice',
-                        'text': "Deliver Grand Indictment Warrant to Prosecutor [A]",
+                        'text': "⚖️ Present Grand Indictment: Accuse Killer & Break Murder Method [A]",
                         'next_node_id': 'c2_scene_5_accusation',
                         'energy_delta': 0,
                         'clue_unlock': None
                     },
                     {
-                        'id': 'to_interrogate',
-                        'text': "Return to Interrogation Room to re-examine suspect alibis [I]",
+                        'id': 'back_to_interrogate_choice',
+                        'text': "👥 Return to Question Suspects / Review Clues First [I]",
                         'next_node_id': 'c2_scene_5_interrogation_intro',
+                        'energy_delta': 0,
+                        'clue_unlock': None
+                    },
+                    {
+                        'id': 'restart_investigation_choice',
+                        'text': "🔄 Not Enough Evidence: Return to Start of Investigation to Find Clues",
+                        'next_node_id': 'c2_scene_1_intro',
                         'energy_delta': 0,
                         'clue_unlock': None
                     }

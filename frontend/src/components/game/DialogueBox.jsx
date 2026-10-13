@@ -34,7 +34,10 @@ export const DialogueBox = ({
   const speaker = currentNode?.speaker || 'DETECTIVE';
   const choices = currentNode?.choices_json || [];
 
-  const isConfrontationNode = currentNode?.node_id === 'scene_5_accusation';
+  const isConfrontationNode =
+    currentNode?.node_id === 'scene_5_accusation' ||
+    currentNode?.node_id === 'c2_scene_5_accusation' ||
+    currentNode?.node_id?.endsWith('_accusation');
   const isTerminalNode = choices.length === 0;
   const isConfrontationOrEnd = isConfrontationNode || isTerminalNode;
 
@@ -240,7 +243,7 @@ export const DialogueBox = ({
                 <p className="text-xs text-slate-300 leading-relaxed font-sans">
                   "Detective, the prosecutor will dismiss our charges without solid proof! We need at least{' '}
                   <strong className="text-amber-300">{minEvidenceRequired} out of 6 confirmed clues (50%)</strong>{' '}
-                  before formally indicting Marcus Vance. Return to the investigation and interrogate the suspects in holding to expose their contradictions!"
+                  before formally indicting {caseData?.id === 'phantom-heir' ? 'Dr. Cedric Laurent' : 'Marcus Vance'}. Return to the investigation and interrogate the suspects in holding to expose their contradictions!"
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">

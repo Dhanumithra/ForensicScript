@@ -139,9 +139,9 @@ export const AccusationBoard = ({
                   "Detective, we cannot indict on incomplete hunches!"
                 </h3>
                 <p className="text-sm text-slate-300 leading-relaxed font-serif italic mb-6">
-                  "The district attorney requires hard forensic evidence before issuing a warrant for the CEO.
+                  "The district attorney requires hard forensic evidence before issuing a warrant for {isCase2 ? 'Dr. Cedric Laurent' : 'the CEO'}.
                   You currently hold {clueCount} out of 6 clues. We need at least {minRequired} confirmed clues (50%)
-                  to avoid a catastrophic dismissal in court. Head back to the lab and inspect the logs."
+                  to avoid a catastrophic dismissal in court. Return to the manor and examine the clues."
                 </p>
                 <div className="flex items-center gap-2 font-mono text-xs text-slate-400 bg-slate-950/80 px-4 py-2 rounded-lg border border-slate-800">
                   <span>Current Progress: {clueCount} / {minRequired} Clues Required</span>

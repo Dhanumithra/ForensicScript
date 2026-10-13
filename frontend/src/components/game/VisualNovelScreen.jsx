@@ -176,24 +176,40 @@ export const VisualNovelScreen = ({ engine }) => {
         key={currentNode?.node_id || 'dialogue-node'}
         currentNode={currentNode}
         onSelectChoice={(choice) => {
+          if (!choice) return;
+
+          // Restart investigation option
           if (
-            choice?.id === 'open_accusation_choice' ||
-            choice?.id === 'to_accuse' ||
-            choice?.id?.includes('open_accusation') ||
-            choice?.id?.includes('to_accusation')
+            choice.id === 'restart_investigation_choice' ||
+            choice.id === 'reinvestigate'
           ) {
-            setIsAccusationOpen(true);
-          } else if (
-            choice?.id === 'back_to_interrogate_choice' ||
-            choice?.id?.includes('open_interrogation') ||
-            choice?.id?.includes('to_interrogate')
-          ) {
-            takeAction(choice);
-            setIsInterrogationOpen(true);
-          } else if (choice?.id === 'restart_investigation_choice') {
             reinvestigateCase();
-          } else {
+            return;
+          }
+
+          const isAccusationChoice =
+            choice.id === 'open_accusation_choice' ||
+            choice.id === 'to_accuse' ||
+            choice.id?.includes('open_accusation') ||
+            choice.id?.includes('to_accusation') ||
+            choice.id?.includes('accuse');
+
+          const isInterrogationChoice =
+            choice.id === 'back_to_interrogate_choice' ||
+            choice.id?.includes('open_interrogation') ||
+            choice.id?.includes('to_interrogate') ||
+            choice.id?.includes('interrogate');
+
+          // Always transition node if next_node_id differs from current node
+          if (choice.next_node_id && choice.next_node_id !== currentNode?.node_id) {
             takeAction(choice);
+          }
+
+          // Trigger corresponding interactive overlay
+          if (isAccusationChoice) {
+            setIsAccusationOpen(true);
+          } else if (isInterrogationChoice) {
+            setIsInterrogationOpen(true);
           }
         }}
         profile={engine.profile}

@@ -314,9 +314,9 @@ class ForensicEngineAPITests(TestCase):
         self.assertTrue(cedric_res.data['success'])
         self.assertEqual(cedric_res.data['sprite'], 'cedric_defeated')
 
-        # 5. Evidence gate: < 4 clues fails indictment
+        # 5. Evidence gate: < 3 clues (50% gate) fails indictment
         session = GameSession.objects.get(session_id=session_id)
-        session.unlocked_clues = ['E1', 'E2', 'E3']
+        session.unlocked_clues = ['E1', 'E2']
         session.save()
 
         fail_accuse = self.client.post('/api/sessions/accuse/', {
